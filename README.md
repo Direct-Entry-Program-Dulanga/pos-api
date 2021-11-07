@@ -18,7 +18,7 @@ The REST API for the Point of Sale System
 * Open an HTTP GET request and try [http://localhost:8080/pos/customers]() and it should display a JSON array, if not please troubleshoot the error before proceeding
 
 ## Change Log
-### v0.0.1
+### [v0.0.1](https://github.com/Direct-Entry-Program-7/pos-api/releases/tag/v0.0.1)
 * Servlet 5 (Tomcat 10)
 * JSONB (Yasson)
 * Junit 5
