@@ -1,4 +1,4 @@
-package lk.ijse.dep7.pos.pos.dto;
+package lk.ijse.dep7.pos.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

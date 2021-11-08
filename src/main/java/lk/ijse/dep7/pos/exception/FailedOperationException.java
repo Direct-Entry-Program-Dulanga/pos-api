@@ -1,4 +1,4 @@
-package lk.ijse.dep7.pos.pos.exception;
+package lk.ijse.dep7.pos.exception;
 
 public class FailedOperationException extends Exception{
     public FailedOperationException() {

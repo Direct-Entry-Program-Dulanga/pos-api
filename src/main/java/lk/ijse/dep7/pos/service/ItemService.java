@@ -1,9 +1,9 @@
-package lk.ijse.dep7.pos.pos.service;
+package lk.ijse.dep7.pos.service;
 
-import lk.ijse.dep7.pos.pos.dto.ItemDTO;
-import lk.ijse.dep7.pos.pos.exception.DuplicateIdentifierException;
-import lk.ijse.dep7.pos.pos.exception.FailedOperationException;
-import lk.ijse.dep7.pos.pos.exception.NotFoundException;
+import lk.ijse.dep7.pos.dto.ItemDTO;
+import lk.ijse.dep7.pos.exception.DuplicateIdentifierException;
+import lk.ijse.dep7.pos.exception.FailedOperationException;
+import lk.ijse.dep7.pos.exception.NotFoundException;
 
 import java.sql.*;
 import java.util.ArrayList;

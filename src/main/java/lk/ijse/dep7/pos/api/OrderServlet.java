@@ -1,4 +1,4 @@
-package lk.ijse.dep7.pos.pos.api;
+package lk.ijse.dep7.pos.api;
 
 import jakarta.annotation.Resource;
 import jakarta.json.bind.Jsonb;
@@ -9,11 +9,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lk.ijse.dep7.pos.pos.dto.OrderDTO;
-import lk.ijse.dep7.pos.pos.exception.DuplicateIdentifierException;
-import lk.ijse.dep7.pos.pos.exception.FailedOperationException;
-import lk.ijse.dep7.pos.pos.exception.NotFoundException;
-import lk.ijse.dep7.pos.pos.service.OrderService;
+import lk.ijse.dep7.pos.exception.DuplicateIdentifierException;
+import lk.ijse.dep7.pos.exception.FailedOperationException;
+import lk.ijse.dep7.pos.exception.NotFoundException;
+import lk.ijse.dep7.pos.dto.OrderDTO;
+import lk.ijse.dep7.pos.service.OrderService;
 
 import javax.sql.DataSource;
 import java.io.IOException;
