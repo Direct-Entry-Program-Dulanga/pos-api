@@ -23,6 +23,14 @@ public class OrderDetail implements Serializable {
         this.qty = qty;
     }
 
+    public OrderDetailPK getOrderDetailPK() {
+        return orderDetailPK;
+    }
+
+    public void setOrderDetailPK(OrderDetailPK orderDetailPK) {
+        this.orderDetailPK = orderDetailPK;
+    }
+
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }
