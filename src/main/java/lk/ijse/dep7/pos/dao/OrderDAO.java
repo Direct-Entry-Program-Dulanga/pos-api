@@ -1,8 +1,13 @@
 package lk.ijse.dep7.pos.dao;
 
+import lk.ijse.dep7.pos.dto.OrderDTO;
 import lk.ijse.dep7.pos.entity.Order;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO {
@@ -13,57 +18,67 @@ public class OrderDAO {
         this.connection = connection;
     }
 
-    public void saveOrder(Order order) {
-
+    public void saveOrder(Order order) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("INSERT INTO `order` (id, date, customer_id) VALUES (?,?,?)");
+        stm.setString(1, order.getId());
+        stm.setDate(2, order.getDate());
+        stm.setString(3, order.getCustomerId());
+        stm.executeUpdate();
     }
 
-    public void updateOrder(Order order) {
-
+    public void updateOrder(Order order) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("UPDATE `order` SET date=?, customer_id=? WHERE id=?");
+        stm.setDate(1, order.getDate());
+        stm.setString(2, order.getCustomerId());
+        stm.setString(3, order.getId());
+        stm.executeUpdate();
     }
 
-    public void deleteOrderById(String orderId) {
-
+    public void deleteOrderById(String orderId) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("DELETE FROM `order` WHERE id=?");
+        stm.setString(1, orderId);
+        stm.executeUpdate();
     }
 
-    public Order findOrderById(String orderId) {
-        return null;
+    public Order findOrderById(String orderId) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("SELECT * FROM `order` WHERE id=?");
+        stm.setString(1, orderId);
+        ResultSet rst = stm.executeQuery();
+
+        if (rst.next()) {
+            return new Order(orderId, rst.getDate("date"), rst.getString("customer_id"));
+        } else {
+            throw new RuntimeException(orderId + " is not found");
+        }
     }
 
-    public List<Order> findAllOrders() {
-        return null;
+    public List<Order> findAllOrders() throws Exception {
+        List<Order> orderList = new ArrayList<>();
+
+        Statement stm = connection.createStatement();
+        ResultSet rst = stm.executeQuery("SELECT * FROM `order`");
+
+        while (rst.next()) {
+            orderList.add(new Order(rst.getString("id"), rst.getDate("date"), rst.getString("customer_id")));
+        }
+
+        return orderList;
     }
 
-    public long countOrders() {
-        return 0;
+    public long countOrders() throws Exception {
+        Statement stm = connection.createStatement();
+        ResultSet rst = stm.executeQuery("SELECT COUNT(*) FROM `order`");
+        rst.next();
+        return rst.getLong(1);
     }
 
-    public boolean existsOrderById(String orderId) {
-        return false;
+    public boolean existsOrderById(String orderId) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("SELECT id FROM `order` WHERE id=?");
+        stm.setString(1, orderId);
+        return stm.executeQuery().next();
     }
 
 
-//    public boolean existsOrder(String orderId) {
-//        try {
-//            PreparedStatement stm = connection.prepareStatement("SELECT id FROM `order` WHERE id=?");
-//            stm.setString(1, orderId);
-//            return stm.executeQuery().next();
-//        } catch (Exception e) {
-//            throw new RuntimeException("Failed operation exception", e);
-//        }
-//    }
-//
-//    public void saveOrder(String orderId, LocalDate orderDate, String customerId) {
-//        try {
-//            PreparedStatement stm = connection.prepareStatement("INSERT INTO `order` (id, date, customer_id) VALUES (?,?,?)");
-//            stm.setString(1, orderId);
-//            stm.setDate(2, Date.valueOf(orderDate));
-//            stm.setString(3, customerId);
-//            stm.executeUpdate();
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Failed to save the order", e);
-//        }
-//    }
-//
 //    public void saveOrderDetail(String orderId, OrderDetailDTO orderDetail) {
 //        try {
 //            PreparedStatement stm = connection.prepareStatement("INSERT INTO order_detail (order_id, item_code, unit_price, qty) VALUES (?,?,?,?)");

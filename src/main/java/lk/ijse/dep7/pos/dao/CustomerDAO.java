@@ -43,6 +43,7 @@ public class CustomerDAO {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
         stm.setString(1, customerId);
         ResultSet rst = stm.executeQuery();
+
         if (rst.next()) {
             return new Customer(customerId, rst.getString("name"), rst.getString("address"));
         } else {
@@ -91,13 +92,7 @@ public class CustomerDAO {
 
     public String getLastCustomerId() throws Exception {
         ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM customer ORDER BY id DESC LIMIT 1;");
-
-        if (rst.next()) {
-            String id = rst.getString("id");
-            return id;
-        } else {
-            return null;
-        }
+        return rst.next()? rst.getString("id"): null;
     }
 
 }
