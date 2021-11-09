@@ -3,6 +3,10 @@ package lk.ijse.dep7.pos.dao;
 import lk.ijse.dep7.pos.entity.Customer;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDAO {
@@ -13,150 +17,87 @@ public class CustomerDAO {
         this.connection = connection;
     }
 
-    public void saveCustomer(Customer customer) {
-
+    public void saveCustomer(Customer customer) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("INSERT INTO customer VALUES (?,?,?)");
+        stm.setString(1, customer.getId());
+        stm.setString(2, customer.getName());
+        stm.setString(3, customer.getAddress());
+        stm.executeUpdate();
     }
 
-    public void updateCustomer(Customer customer) {
-
+    public void updateCustomer(Customer customer) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("UPDATE customer SET name=?, address=? WHERE id=?");
+        stm.setString(1, customer.getName());
+        stm.setString(2, customer.getAddress());
+        stm.setString(3, customer.getId());
+        stm.executeUpdate();
     }
 
-    public void deleteCustomerById(String customerId) {
-
+    public void deleteCustomerById(String customerId) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("DELETE FROM customer WHERE id=?");
+        stm.setString(1, customerId);
+        stm.executeUpdate();
     }
 
-    public Customer findCustomerById(String customerId) {
-        return null;
+    public Customer findCustomerById(String customerId) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
+        stm.setString(1, customerId);
+        ResultSet rst = stm.executeQuery();
+        if (rst.next()) {
+            return new Customer(customerId, rst.getString("name"), rst.getString("address"));
+        } else {
+            throw new RuntimeException(customerId + " is not found");
+        }
     }
 
-    public List<Customer> findAllCustomers() {
-        return null;
+    public List<Customer> findAllCustomers() throws Exception {
+        List<Customer> customersList = new ArrayList<>();
+
+        Statement stm = connection.createStatement();
+        ResultSet rst = stm.executeQuery("SELECT * FROM customer");
+
+        while (rst.next()) {
+            customersList.add(new Customer(rst.getString("id"), rst.getString("name"), rst.getString("address")));
+        }
+
+        return customersList;
     }
 
-    public long countCustomers() {
-        return 0;
+    public long countCustomers() throws Exception {
+        Statement stm = connection.createStatement();
+        ResultSet rst = stm.executeQuery("SELECT COUNT(*) FROM customer");
+        rst.next();
+        return rst.getLong(1);
     }
 
-    public boolean existsCustomerById(String customerId) {
-        return false;
+    public boolean existsCustomerById(String customerId) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("SELECT id FROM customer WHERE id=?");
+        stm.setString(1, customerId);
+        return stm.executeQuery().next();
     }
 
-//    public void saveCustomer(CustomerDTO customer) {
-//        try {
-//            PreparedStatement pstm = connection.prepareStatement("INSERT INTO customer (id,name, address) VALUES (?,?,?)");
-//            pstm.setString(1, customer.getId());
-//            pstm.setString(2, customer.getName());
-//            pstm.setString(3, customer.getAddress());
-//            pstm.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("Failed to save the customer");
-//        }
-//    }
-//
-//    public long getCustomersCount() {
-//        try {
-//            Statement stm = connection.createStatement();
-//            ResultSet rst = stm.executeQuery("SELECT COUNT(*) FROM customer");
-//            rst.next();
-//            return rst.getLong(1);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("Failed to get customers count");
-//        }
-//    }
-//
-//    public boolean existsCustomer(String customerId) {
-//        try {
-//            PreparedStatement pstm = connection.prepareStatement("SELECT id FROM customer WHERE id=?");
-//            pstm.setString(1, customerId);
-//            return pstm.executeQuery().next();
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Failed operation");
-//        }
-//    }
-//
-//    public void updateCustomer(CustomerDTO customer) {
-//        try {
-//            PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET name=?, address=? WHERE id=?");
-//            pstm.setString(1, customer.getName());
-//            pstm.setString(2, customer.getAddress());
-//            pstm.setString(3, customer.getId());
-//            pstm.executeUpdate();
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Failed to update the customer " + customer.getId(), e);
-//        }
-//    }
-//
-//    public void deleteCustomer(String customerId) {
-//        try {
-//            PreparedStatement pstm = connection.prepareStatement("DELETE FROM customer WHERE id=?");
-//            pstm.setString(1, customerId);
-//            pstm.executeUpdate();
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Failed to delete the customer " + customerId, e);
-//        }
-//    }
-//
-//    public CustomerDTO findCustomer(String customerId) {
-//        try {
-//            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
-//            pstm.setString(1, customerId);
-//            ResultSet rst = pstm.executeQuery();
-//            rst.next();
-//            return new CustomerDTO(customerId, rst.getString("name"), rst.getString("address"));
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Failed to find the customer " + customerId, e);
-//        }
-//    }
-//
-//    public List<CustomerDTO> findAllCustomers(){
-//        try {
-//            List<CustomerDTO> customersList = new ArrayList<>();
-//
-//            Statement stm = connection.createStatement();
-//            ResultSet rst = stm.executeQuery("SELECT * FROM customer");
-//
-//            while (rst.next()) {
-//                customersList.add(new CustomerDTO(rst.getString("id"), rst.getString("name"), rst.getString("address")));
-//            }
-//
-//            return customersList;
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Failed to find customers", e);
-//        }
-//    }
-//
-//    public List<CustomerDTO> findAllCustomers(int page, int size){
-//        try {
-//            PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer LIMIT ? OFFSET ?;");
-//            stm.setObject(1, size);
-//            stm.setObject(2, size * (page - 1));
-//            ResultSet rst = stm.executeQuery();
-//            List<CustomerDTO> customersList = new ArrayList<>();
-//
-//            while (rst.next()) {
-//                customersList.add(new CustomerDTO(rst.getString("id"), rst.getString("name"), rst.getString("address")));
-//            }
-//            return customersList;
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Failed to fetch customers", e);
-//        }
-//    }
-//
-//    public String getLastCustomerId(){
-//        try {
-//            ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM customer ORDER BY id DESC LIMIT 1;");
-//
-//            if (rst.next()) {
-//                String id = rst.getString("id");
-//                return id;
-//            } else {
-//                return null;
-//            }
-//        }catch (Exception e){
-//            throw new RuntimeException("Failed operation");
-//        }
-//    }
+    public List<Customer> findAllCustomers(int page, int size) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer LIMIT ? OFFSET ?;");
+        stm.setObject(1, size);
+        stm.setObject(2, size * (page - 1));
+        ResultSet rst = stm.executeQuery();
+        List<Customer> customersList = new ArrayList<>();
+
+        while (rst.next()) {
+            customersList.add(new Customer(rst.getString("id"), rst.getString("name"), rst.getString("address")));
+        }
+        return customersList;
+    }
+
+    public String getLastCustomerId() throws Exception {
+        ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM customer ORDER BY id DESC LIMIT 1;");
+
+        if (rst.next()) {
+            String id = rst.getString("id");
+            return id;
+        } else {
+            return null;
+        }
+    }
 
 }
