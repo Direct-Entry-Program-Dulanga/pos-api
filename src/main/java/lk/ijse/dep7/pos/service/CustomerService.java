@@ -12,7 +12,6 @@ import java.util.List;
 
 public class CustomerService {
 
-    private Connection connection;
     private CustomerDAO customerDAO;
 
     public CustomerService() {
