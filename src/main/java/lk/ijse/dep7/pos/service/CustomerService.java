@@ -2,17 +2,11 @@ package lk.ijse.dep7.pos.service;
 
 import lk.ijse.dep7.pos.dao.CustomerDAO;
 import lk.ijse.dep7.pos.dto.CustomerDTO;
-import lk.ijse.dep7.pos.entity.Customer;
-import lk.ijse.dep7.pos.exception.DuplicateIdentifierException;
-import lk.ijse.dep7.pos.exception.FailedOperationException;
-import lk.ijse.dep7.pos.exception.NotFoundException;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 
 public class CustomerService {
 
@@ -29,7 +23,7 @@ public class CustomerService {
         if (existCustomer(customer.getId())) {
             throw new RuntimeException(customer.getId() + " already exists");
         }
-        customerDAO.saveCustomer(new Customer(customer.getId(), customer.getName(), customer.getAddress()));
+        customerDAO.saveCustomer(fromCustomerDTO(customer));
     }
 
     public long getCustomersCount() throws Exception {
@@ -40,11 +34,11 @@ public class CustomerService {
         return customerDAO.existsCustomerById(id);
     }
 
-    public void updateCustomer(CustomerDTO customer) throws Exception{
+    public void updateCustomer(CustomerDTO customer) throws Exception {
         if (!existCustomer(customer.getId())) {
             throw new RuntimeException("There is no such customer associated with the id " + customer.getId());
         }
-        customerDAO.updateCustomer(new Customer(customer.getId(), customer.getName(), customer.getAddress()));
+        customerDAO.updateCustomer(fromCustomerDTO(customer));
     }
 
     public void deleteCustomer(String id) throws Exception {
@@ -55,15 +49,17 @@ public class CustomerService {
     }
 
     public CustomerDTO findCustomer(String id) throws Exception {
-        return customerDAO.findCustomerById(id).map(c -> new CustomerDTO(c.getId(), c.getName(), c.getAddress())).orElseThrow(() -> {throw new RuntimeException("There is no such customer associated with the id " + id);});
+        return toCustomerDTO(customerDAO.findCustomerById(id).orElseThrow(() -> {
+            throw new RuntimeException("There is no such customer associated with the id " + id);
+        }));
     }
 
     public List<CustomerDTO> findAllCustomers() throws Exception {
-        return customerDAO.findAllCustomers().stream().map(c-> new CustomerDTO(c.getId(), c.getName(), c.getAddress())).collect(Collectors.toList());
+        return toCustomerDTOList(customerDAO.findAllCustomers());
     }
 
     public List<CustomerDTO> findAllCustomers(int page, int size) throws Exception {
-        return customerDAO.findAllCustomers(page,size).stream().map(c-> new CustomerDTO(c.getId(), c.getName(), c.getAddress())).collect(Collectors.toList());
+        return toCustomerDTOList(customerDAO.findAllCustomers(page, size));
     }
 
     public String generateNewCustomerId() throws Exception {
