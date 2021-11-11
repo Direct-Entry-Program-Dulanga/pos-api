@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class OrderDetailDAO {
 
@@ -42,20 +43,16 @@ public class OrderDetailDAO {
         stm.executeUpdate();
     }
 
-    public OrderDetail findOrderDetailByPK(OrderDetailPK orderDetailPK) throws Exception {
+    public Optional<OrderDetail> findOrderDetailByPK(OrderDetailPK orderDetailPK) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM order_detail WHERE order_id = ? AND item_code =?");
         stm.setString(1, orderDetailPK.getOrderId());
         stm.setString(2, orderDetailPK.getItemCode());
         ResultSet rst = stm.executeQuery();
 
-        if (rst.next()) {
-            return new OrderDetail(rst.getString("order_id"),
-                    rst.getString("item_code"),
-                    rst.getBigDecimal("unit_price"),
-                    rst.getInt("qty"));
-        } else {
-            throw new RuntimeException(orderDetailPK + " is not found");
-        }
+        return (rst.next()) ? Optional.of(new OrderDetail(rst.getString("order_id"),
+                rst.getString("item_code"),
+                rst.getBigDecimal("unit_price"),
+                rst.getInt("qty"))) : Optional.empty();
     }
 
     public List<OrderDetail> findAllOrderDetails() throws Exception {

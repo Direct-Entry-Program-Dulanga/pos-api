@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CustomerDAO {
 
@@ -39,16 +40,11 @@ public class CustomerDAO {
         stm.executeUpdate();
     }
 
-    public Customer findCustomerById(String customerId) throws Exception {
+    public Optional<Customer> findCustomerById(String customerId) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
         stm.setString(1, customerId);
         ResultSet rst = stm.executeQuery();
-
-        if (rst.next()) {
-            return new Customer(customerId, rst.getString("name"), rst.getString("address"));
-        } else {
-            throw new RuntimeException(customerId + " is not found");
-        }
+        return (rst.next()) ? Optional.of(new Customer(customerId, rst.getString("name"), rst.getString("address"))) : Optional.empty();
     }
 
     public List<Customer> findAllCustomers() throws Exception {
@@ -92,7 +88,7 @@ public class CustomerDAO {
 
     public String getLastCustomerId() throws Exception {
         ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM customer ORDER BY id DESC LIMIT 1;");
-        return rst.next()? rst.getString("id"): null;
+        return rst.next() ? rst.getString("id") : null;
     }
 
 }

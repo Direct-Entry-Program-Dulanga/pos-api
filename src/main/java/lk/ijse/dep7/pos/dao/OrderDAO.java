@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class OrderDAO {
 
@@ -39,16 +40,11 @@ public class OrderDAO {
         stm.executeUpdate();
     }
 
-    public Order findOrderById(String orderId) throws Exception {
+    public Optional<Order> findOrderById(String orderId) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM `order` WHERE id=?");
         stm.setString(1, orderId);
         ResultSet rst = stm.executeQuery();
-
-        if (rst.next()) {
-            return new Order(orderId, rst.getDate("date"), rst.getString("customer_id"));
-        } else {
-            throw new RuntimeException(orderId + " is not found");
-        }
+        return (rst.next()) ? Optional.of(new Order(orderId, rst.getDate("date"), rst.getString("customer_id"))) : Optional.empty();
     }
 
     public List<Order> findAllOrders() throws Exception {
@@ -78,8 +74,8 @@ public class OrderDAO {
     }
 
 
-    public String getLastOrderId() throws Exception{
+    public String getLastOrderId() throws Exception {
         ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM `order` ORDER BY id DESC LIMIT 1;");
-        return rst.next()? rst.getString("id"): null;
+        return rst.next() ? rst.getString("id") : null;
     }
 }
