@@ -18,17 +18,17 @@ class QueryDAOTest {
     @BeforeEach
     void setUp() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dep7_pos", "root", "mysql");
-        this.queryDAO = new QueryDAO(connection);
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dep7_pos","root","mysql");
+        queryDAO = new QueryDAO(connection);
+    }
+
+    @Test
+    void searchOrders() throws Exception {
+        queryDAO.findOrders("", 1, 5).forEach(System.out::println);
     }
 
     @AfterEach
     void tearDown() throws SQLException {
         connection.close();
-    }
-
-    @Test
-    void searchOrders() throws Exception {
-        this.queryDAO.searchOrders("").forEach(System.out::println);
     }
 }
