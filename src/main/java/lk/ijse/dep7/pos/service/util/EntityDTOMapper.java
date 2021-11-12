@@ -70,6 +70,25 @@ public class EntityDTOMapper {
                 ce.getOrderTotal());
     }
 
+    public static OrderDetailDTO toOrderDetailDTO(OrderDetail orderDetail){
+        return new OrderDetailDTO(orderDetail.getOrderDetailPK().getItemCode(),
+                orderDetail.getQty(),
+                orderDetail.getUnitPrice());
+    }
+
+    public static List<OrderDetailDTO> toOrderDetailDTOList(List<OrderDetail> orderDetails){
+        return orderDetails.stream().map(EntityDTOMapper::toOrderDetailDTO).collect(Collectors.toList());
+    }
+
+    public static OrderDTO toOrderDTO(Order order, Customer customer, BigDecimal orderTotal, List<OrderDetail> orderDetails){
+        new OrderDTO(order.getId(),
+                order.getDate().toLocalDate(),
+                order.getCustomerId(),
+                customer.getName(),
+                orderTotal,
+                toOrderDetailDTOList(orderDetails));
+    }
+
     public static List<OrderDTO> toOrderDTO1(List<HashMap<String, Object>> orderRecords){
         return orderRecords.stream().map(EntityDTOMapper::toOrderDTO).collect(Collectors.toList());
     }
