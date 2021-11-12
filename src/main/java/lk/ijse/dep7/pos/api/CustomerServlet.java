@@ -9,9 +9,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lk.ijse.dep7.pos.exception.DuplicateIdentifierException;
-import lk.ijse.dep7.pos.exception.FailedOperationException;
-import lk.ijse.dep7.pos.exception.NotFoundException;
 import lk.ijse.dep7.pos.dto.CustomerDTO;
 import lk.ijse.dep7.pos.service.CustomerService;
 
@@ -19,7 +16,6 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,10 +68,8 @@ public class CustomerServlet extends HttpServlet {
             PrintWriter out = resp.getWriter();
             out.println(json);
 
-        } catch (SQLException | FailedOperationException ex) {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
-        } catch (NotFoundException e) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
 
     }
@@ -112,10 +106,8 @@ public class CustomerServlet extends HttpServlet {
 
         } catch (JsonbException exp) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        } catch (SQLException | RuntimeException | FailedOperationException exp) {
+        } catch (Exception exp) {
             throw new RuntimeException(exp);
-        } catch (DuplicateIdentifierException e) {
-            throw new RuntimeException("Customer already exits", e);
         }
 
     }
@@ -149,10 +141,8 @@ public class CustomerServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 resp.getWriter().println(jsonb.toJson("OK"));
 
-            } catch (SQLException | FailedOperationException ex) {
+            } catch (Exception ex) {
                 throw new RuntimeException(ex);
-            } catch (NotFoundException e) {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
 
         } catch (JsonbException ex) {
@@ -178,10 +168,8 @@ public class CustomerServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
             resp.getWriter().println(jsonb.toJson("OK"));
 
-        } catch (SQLException | FailedOperationException exp) {
+        } catch (Exception exp) {
             throw new RuntimeException(exp);
-        } catch (NotFoundException e) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
 
     }
