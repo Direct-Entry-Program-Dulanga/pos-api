@@ -90,7 +90,7 @@ public class OrderService {
     }
 
     public OrderDTO searchOrder(String orderId) throws Exception {
-        Order order = orderDAO.findOrderById(orderId).orElseThrow(() -> {
+        Order order = orderDAO.findOrderById(orderId).<RuntimeException>orElseThrow(() -> {
             throw new RuntimeException("Invalid Order ID: " + orderId);
         });
         Customer customer = customerDAO.findCustomerById(order.getCustomerId()).get();
