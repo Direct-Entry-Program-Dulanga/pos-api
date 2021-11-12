@@ -1,6 +1,6 @@
 package lk.ijse.dep7.pos.service;
 
-import lk.ijse.dep7.pos.dao.ItemDAO;
+import lk.ijse.dep7.pos.dao.impl.ItemDAOImpl;
 import lk.ijse.dep7.pos.dto.ItemDTO;
 
 import java.sql.Connection;
@@ -10,56 +10,56 @@ import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 
 public class ItemService {
 
-    private ItemDAO itemDAO;
+    private ItemDAOImpl itemDAOImpl;
 
     public ItemService() {
     }
 
     public ItemService(Connection connection) {
-        itemDAO = new ItemDAO(connection);
+        itemDAOImpl = new ItemDAOImpl(connection);
     }
 
     public void saveItem(ItemDTO item) throws Exception {
         if (existItem(item.getCode())) {
             throw new RuntimeException(item.getCode() + " already exists");
         }
-        itemDAO.saveItem(fromItemDTO(item));
+        itemDAOImpl.saveItem(fromItemDTO(item));
     }
 
     private boolean existItem(String code) throws Exception {
-        return itemDAO.existsItemByCode(code);
+        return itemDAOImpl.existsItemByCode(code);
     }
 
     public void updateItem(ItemDTO item) throws Exception {
         if (!existItem(item.getCode())) {
             throw new RuntimeException("There is no such item associated with the id " + item.getCode());
         }
-        itemDAO.updateItem(fromItemDTO(item));
+        itemDAOImpl.updateItem(fromItemDTO(item));
     }
 
     public void deleteItem(String code) throws Exception {
         if (!existItem(code)) {
             throw new RuntimeException("There is no such item associated with the id " + code);
         }
-        itemDAO.deleteItemByCode(code);
+        itemDAOImpl.deleteItemByCode(code);
     }
 
     public ItemDTO findItem(String code) throws Exception {
-        return toItemDTO(itemDAO.findItemByCode(code).<RuntimeException>orElseThrow(() -> {
+        return toItemDTO(itemDAOImpl.findItemByCode(code).<RuntimeException>orElseThrow(() -> {
             throw new RuntimeException("There is no such item associated with the id " + code);
         }));
     }
 
     public List<ItemDTO> findAllItems() throws Exception {
-        return toItemDTOList(itemDAO.findAllItems());
+        return toItemDTOList(itemDAOImpl.findAllItems());
     }
 
     public List<ItemDTO> findAllItems(int page, int size) throws Exception {
-        return toItemDTOList(itemDAO.findAllItems(page, size));
+        return toItemDTOList(itemDAOImpl.findAllItems(page, size));
     }
 
     public String generateNewItemCode() throws Exception {
-        String code = itemDAO.getLastItemCode();
+        String code = itemDAOImpl.getLastItemCode();
 
         if (code != null) {
             int newItemCode = Integer.parseInt(code.replace("I", "")) + 1;

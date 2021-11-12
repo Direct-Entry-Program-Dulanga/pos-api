@@ -1,4 +1,4 @@
-package lk.ijse.dep7.pos.dao;
+package lk.ijse.dep7.pos.dao.impl;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,23 +8,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+class QueryDAOImplTest {
 
-class QueryDAOTest {
-
-    private QueryDAO queryDAO;
+    private QueryDAOImpl queryDAOImpl;
     private Connection connection;
 
     @BeforeEach
     void setUp() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dep7_pos","root","mysql");
-        queryDAO = new QueryDAO(connection);
+        queryDAOImpl = new QueryDAOImpl(connection);
     }
 
     @Test
     void searchOrders() throws Exception {
-        queryDAO.findOrders("", 1, 5).forEach(System.out::println);
+        queryDAOImpl.findOrders("", 1, 5).forEach(System.out::println);
     }
 
     @AfterEach
