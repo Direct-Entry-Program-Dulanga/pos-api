@@ -1,5 +1,9 @@
 package lk.ijse.dep7.pos.service;
 
+import lk.ijse.dep7.pos.dao.CustomerDAO;
+import lk.ijse.dep7.pos.dao.OrderDAO;
+import lk.ijse.dep7.pos.dao.OrderDetailDAO;
+import lk.ijse.dep7.pos.dao.QueryDAO;
 import lk.ijse.dep7.pos.dao.impl.CustomerDAOImpl;
 import lk.ijse.dep7.pos.dao.impl.OrderDAOImpl;
 import lk.ijse.dep7.pos.dao.impl.OrderDetailDAOImpl;
@@ -21,17 +25,17 @@ import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 public class OrderService {
 
     private final Connection connection;
-    private final CustomerDAOImpl customerDAOImpl;
-    private final OrderDAOImpl orderDAOImpl;
-    private final OrderDetailDAOImpl orderDetailDAOImpl;
-    private final QueryDAOImpl queryDAOImpl;
+    private final CustomerDAO customerDAO;
+    private final OrderDAO orderDAO;
+    private final OrderDetailDAO orderDetailDAO;
+    private final QueryDAO queryDAO;
 
     public OrderService(Connection connection) {
         this.connection = connection;
-        this.orderDAOImpl = new OrderDAOImpl(connection);
-        this.orderDetailDAOImpl = new OrderDetailDAOImpl(connection);
-        this.queryDAOImpl = new QueryDAOImpl(connection);
-        this.customerDAOImpl = new CustomerDAOImpl(connection);
+        this.orderDAO = new OrderDAOImpl(connection);
+        this.orderDetailDAO = new OrderDetailDAOImpl(connection);
+        this.queryDAO = new QueryDAOImpl(connection);
+        this.customerDAO = new CustomerDAOImpl(connection);
     }
 
     public void saveOrder(OrderDTO order) throws Exception {
@@ -44,7 +48,7 @@ public class OrderService {
         try {
             connection.setAutoCommit(false);
 
-            if (orderDAOImpl.existsOrderById(orderId)) {
+            if (orderDAO.existsOrderById(orderId)) {
                 throw new RuntimeException("Invalid Order ID." + orderId + " already exists");
             }
 
@@ -52,10 +56,10 @@ public class OrderService {
                 throw new RuntimeException("Invalid Customer ID." + customerId + " doesn't exist");
             }
 
-            orderDAOImpl.saveOrder(fromOrderDTO(order));
+            orderDAO.saveOrder(fromOrderDTO(order));
 
             for (OrderDetailDTO detail : order.getOrderDetails()) {
-                orderDetailDAOImpl.saveOrderDetail(fromOrderDetailDTO(orderId, detail));
+                orderDetailDAO.saveOrderDetail(fromOrderDetailDTO(orderId, detail));
 
                 ItemDTO item = itemService.findItem(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
@@ -76,28 +80,28 @@ public class OrderService {
     }
 
     public long getSearchOrdersCount(String query) throws Exception {
-        return queryDAOImpl.countOrders(query);
+        return queryDAO.countOrders(query);
     }
 
     public List<OrderDTO> searchOrders(String query, int page, int size) throws Exception {
         // CustomEntity => OrderDTO
         // List<CustomEntity> => List<OrderDTO>
-        return toOrderDTO2(queryDAOImpl.findOrders(query, page, size));
+        return toOrderDTO2(queryDAO.findOrders(query, page, size));
     }
 
     public OrderDTO searchOrder(String orderId) throws Exception {
-        Order order = orderDAOImpl.findOrderById(orderId).orElseThrow(() -> {
+        Order order = orderDAO.findOrderById(orderId).orElseThrow(() -> {
             throw new RuntimeException("Invalid Order ID: " + orderId);
         });
-        Customer customer = customerDAOImpl.findCustomerById(order.getCustomerId()).get();
-        BigDecimal orderTotal = orderDetailDAOImpl.findOrderTotal(orderId).get();
-        List<OrderDetail> orderDetails = orderDetailDAOImpl.findOrderDetailsByOrderId(orderId);
+        Customer customer = customerDAO.findCustomerById(order.getCustomerId()).get();
+        BigDecimal orderTotal = orderDetailDAO.findOrderTotal(orderId).get();
+        List<OrderDetail> orderDetails = orderDetailDAO.findOrderDetailsByOrderId(orderId);
 
         return toOrderDTO(order, customer, orderTotal, orderDetails);
     }
 
     public String generateNewOrderId() throws Exception {
-        String id = orderDAOImpl.getLastOrderId();
+        String id = orderDAO.getLastOrderId();
         if (id != null) {
             return String.format("OD%03d", (Integer.parseInt(id.replace("OD", "")) + 1));
         } else {
