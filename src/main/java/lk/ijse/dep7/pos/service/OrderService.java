@@ -10,6 +10,7 @@ import lk.ijse.dep7.pos.dto.OrderDetailDTO;
 import lk.ijse.dep7.pos.entity.Customer;
 import lk.ijse.dep7.pos.entity.Order;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -87,12 +88,13 @@ public class OrderService {
     public OrderDTO searchOrder(String orderId) throws Exception {
         Order order = orderDAO.findOrderById(orderId).get();
         Customer customer = customerDAO.findCustomerById(order.getCustomerId()).get();
+        BigDecimal orderTotal = orderDetailDAO.findOrderTotal(orderId).get();
 
-        new OrderDTO(order.getId(),
+        new OrderDTO(orderId,
                 order.getDate().toLocalDate(),
                 order.getCustomerId(),
-                customer.getName()
-                );
+                customer.getName(),
+                orderTotal);
     }
 
     public List<OrderDetailDTO> findOrderDetails(String orderId) throws Exception {
