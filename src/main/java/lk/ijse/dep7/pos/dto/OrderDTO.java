@@ -3,6 +3,7 @@ package lk.ijse.dep7.pos.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDTO implements Serializable {

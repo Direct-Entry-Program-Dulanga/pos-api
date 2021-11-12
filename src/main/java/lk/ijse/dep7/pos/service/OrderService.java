@@ -1,21 +1,26 @@
 package lk.ijse.dep7.pos.service;
 
+import lk.ijse.dep7.pos.dao.CustomerDAO;
 import lk.ijse.dep7.pos.dao.OrderDAO;
 import lk.ijse.dep7.pos.dao.OrderDetailDAO;
 import lk.ijse.dep7.pos.dao.QueryDAO;
 import lk.ijse.dep7.pos.dto.ItemDTO;
 import lk.ijse.dep7.pos.dto.OrderDTO;
 import lk.ijse.dep7.pos.dto.OrderDetailDTO;
+import lk.ijse.dep7.pos.entity.Customer;
+import lk.ijse.dep7.pos.entity.Order;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 
 public class OrderService {
 
     private final Connection connection;
+    private final CustomerDAO customerDAO;
     private final OrderDAO orderDAO;
     private final OrderDetailDAO orderDetailDAO;
     private final QueryDAO queryDAO;
@@ -25,6 +30,7 @@ public class OrderService {
         this.orderDAO = new OrderDAO(connection);
         this.orderDetailDAO = new OrderDetailDAO(connection);
         this.queryDAO = new QueryDAO(connection);
+        this.customerDAO = new CustomerDAO(connection);
     }
 
     public void saveOrder(OrderDTO order) throws Exception {
@@ -38,11 +44,11 @@ public class OrderService {
             connection.setAutoCommit(false);
 
             if (orderDAO.existsOrderById(orderId)) {
-                throw new RuntimeException(orderId + " already exists");
+                throw new RuntimeException("Invalid Order ID." + orderId + " already exists");
             }
 
             if (!customerService.existCustomer(customerId)) {
-                throw new RuntimeException("Customer id doesn't exist");
+                throw new RuntimeException("Invalid Customer ID." + customerId + " doesn't exist");
             }
 
             orderDAO.saveOrder(fromOrderDTO(order));
@@ -68,23 +74,25 @@ public class OrderService {
 
     }
 
-    public List<OrderDTO> searchOrders(String query) throws Exception {
-        return toOrderDTO1(queryDAO.findOrders(query));
-    }
-
     public long getSearchOrdersCount(String query) throws Exception {
         return queryDAO.countOrders(query);
     }
 
     public List<OrderDTO> searchOrders(String query, int page, int size) throws Exception {
+        // CustomEntity => OrderDTO
+        // List<CustomEntity> => List<OrderDTO>
         return toOrderDTO2(queryDAO.findOrders(query, page, size));
     }
 
     public OrderDTO searchOrder(String orderId) throws Exception {
-        List<OrderDetailDTO> orderDetails = findOrderDetails(orderId);
-        List<OrderDTO> orderDTOS = searchOrders(orderId);
-        orderDTOS.get(0).setOrderDetails(orderDetails);
-        return orderDTOS.get(0);
+        Order order = orderDAO.findOrderById(orderId).get();
+        Customer customer = customerDAO.findCustomerById(order.getCustomerId()).get();
+
+        new OrderDTO(order.getId(),
+                order.getDate().toLocalDate(),
+                order.getCustomerId(),
+                customer.getName()
+                );
     }
 
     public List<OrderDetailDTO> findOrderDetails(String orderId) throws Exception {

@@ -3,6 +3,7 @@ package lk.ijse.dep7.pos.dao;
 import lk.ijse.dep7.pos.entity.OrderDetail;
 import lk.ijse.dep7.pos.entity.OrderDetailPK;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -82,6 +83,13 @@ public class OrderDetailDAO {
         stm.setString(2, orderDetailPK.getItemCode());
         ResultSet rst = stm.executeQuery();
         return rst.next();
+    }
+
+    public Optional<BigDecimal> getOrderTotal(String orderId) throws Exception{
+        PreparedStatement stm = connection.prepareStatement("SELECT order_id, SUM(unit_price * qty) as total FROM order_detail WHERE order_id=? GROUP BY order_id;");
+        stm.setString(1, orderId);
+        ResultSet rst = stm.executeQuery();
+        return rst.next()? Optional.of(rst.getBigDecimal("total")): Optional.empty();
     }
 
 
