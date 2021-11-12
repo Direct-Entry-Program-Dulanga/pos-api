@@ -1,10 +1,9 @@
 package lk.ijse.dep7.pos.entity;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-public class CustomEntity implements Serializable {
+public class CustomEntity implements SuperEntity {
     private String orderId;
     private Date orderDate;
     private String customerId;

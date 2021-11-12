@@ -2,6 +2,7 @@ package lk.ijse.dep7.pos.dao.impl;
 
 import lk.ijse.dep7.pos.dao.CustomerDAO;
 import lk.ijse.dep7.pos.entity.Customer;
+import lk.ijse.dep7.pos.entity.SuperEntity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,8 +21,9 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public void saveCustomer(Customer customer) throws Exception {
+    public void save(SuperEntity entity) throws Exception {
         PreparedStatement stm = connection.prepareStatement("INSERT INTO customer VALUES (?,?,?)");
+        Customer customer = (Customer) entity;
         stm.setString(1, customer.getId());
         stm.setString(2, customer.getName());
         stm.setString(3, customer.getAddress());
@@ -29,8 +31,9 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public void updateCustomer(Customer customer) throws Exception {
+    public void update(SuperEntity entity) throws Exception {
         PreparedStatement stm = connection.prepareStatement("UPDATE customer SET name=?, address=? WHERE id=?");
+        Customer customer = (Customer) entity;
         stm.setString(1, customer.getName());
         stm.setString(2, customer.getAddress());
         stm.setString(3, customer.getId());
@@ -38,23 +41,23 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public void deleteCustomerById(String customerId) throws Exception {
+    public void deleteById(Object key) throws Exception {
         PreparedStatement stm = connection.prepareStatement("DELETE FROM customer WHERE id=?");
-        stm.setString(1, customerId);
+        stm.setString(1, key.toString());
         stm.executeUpdate();
     }
 
     @Override
-    public Optional<Customer> findCustomerById(String customerId) throws Exception {
+    public Optional<SuperEntity> findById(Object key) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
-        stm.setString(1, customerId);
+        stm.setString(1, key.toString());
         ResultSet rst = stm.executeQuery();
-        return (rst.next()) ? Optional.of(new Customer(customerId, rst.getString("name"), rst.getString("address"))) : Optional.empty();
+        return (rst.next()) ? Optional.of(new Customer(key.toString(), rst.getString("name"), rst.getString("address"))) : Optional.empty();
     }
 
     @Override
-    public List<Customer> findAllCustomers() throws Exception {
-        List<Customer> customersList = new ArrayList<>();
+    public List<SuperEntity> findAll() throws Exception {
+        List<SuperEntity> customersList = new ArrayList<>();
 
         Statement stm = connection.createStatement();
         ResultSet rst = stm.executeQuery("SELECT * FROM customer");
@@ -67,7 +70,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public long countCustomers() throws Exception {
+    public long count() throws Exception {
         Statement stm = connection.createStatement();
         ResultSet rst = stm.executeQuery("SELECT COUNT(*) FROM customer");
         rst.next();
@@ -75,19 +78,19 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public boolean existsCustomerById(String customerId) throws Exception {
+    public boolean existsById(Object key) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT id FROM customer WHERE id=?");
-        stm.setString(1, customerId);
+        stm.setString(1, key.toString());
         return stm.executeQuery().next();
     }
 
     @Override
-    public List<Customer> findAllCustomers(int page, int size) throws Exception {
+    public List<SuperEntity> findAll(int page, int size) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer LIMIT ? OFFSET ?;");
         stm.setObject(1, size);
         stm.setObject(2, size * (page - 1));
         ResultSet rst = stm.executeQuery();
-        List<Customer> customersList = new ArrayList<>();
+        List<SuperEntity> customersList = new ArrayList<>();
 
         while (rst.next()) {
             customersList.add(new Customer(rst.getString("id"), rst.getString("name"), rst.getString("address")));

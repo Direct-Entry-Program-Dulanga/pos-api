@@ -1,8 +1,6 @@
 package lk.ijse.dep7.pos.entity;
 
-import java.io.Serializable;
-
-public class Customer implements Serializable {
+public class Customer implements SuperEntity {
     private String id;
     private String name;
     private String address;

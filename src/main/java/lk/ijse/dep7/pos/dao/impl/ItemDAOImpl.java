@@ -2,9 +2,11 @@ package lk.ijse.dep7.pos.dao.impl;
 
 import lk.ijse.dep7.pos.dao.ItemDAO;
 import lk.ijse.dep7.pos.entity.Item;
+import lk.ijse.dep7.pos.entity.SuperEntity;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +19,9 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public void saveItem(Item item) throws Exception {
+    public void save(SuperEntity entity) throws Exception {
         PreparedStatement stm = connection.prepareStatement("INSERT INTO item (code, description, unit_price, qty_on_hand) VALUES (?,?,?,?)");
+        Item item = (Item) entity;
         stm.setString(1, item.getCode());
         stm.setString(2, item.getDescription());
         stm.setBigDecimal(3, item.getUnitPrice());

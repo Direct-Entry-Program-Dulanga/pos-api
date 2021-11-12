@@ -1,9 +1,8 @@
 package lk.ijse.dep7.pos.entity;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Item implements Serializable {
+public class Item implements SuperEntity {
     private String code;
     private String description;
     private BigDecimal unitPrice;
