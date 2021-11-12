@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 
@@ -86,7 +87,7 @@ public class OrderService {
     }
 
     public OrderDTO searchOrder(String orderId) throws Exception {
-        Order order = orderDAO.findOrderById(orderId).orElseThrow(() -> {
+        Order order = orderDAO.findOrderById(orderId).<RuntimeException>orElseThrow(() -> {
             throw new RuntimeException("Invalid Order ID: " + orderId);
         });
         Customer customer = customerDAO.findCustomerById(order.getCustomerId()).get();
