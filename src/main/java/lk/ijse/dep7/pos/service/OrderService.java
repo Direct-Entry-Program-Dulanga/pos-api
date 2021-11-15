@@ -1,9 +1,6 @@
 package lk.ijse.dep7.pos.service;
 
-import lk.ijse.dep7.pos.dao.CustomerDAO;
-import lk.ijse.dep7.pos.dao.OrderDAO;
-import lk.ijse.dep7.pos.dao.OrderDetailDAO;
-import lk.ijse.dep7.pos.dao.QueryDAO;
+import lk.ijse.dep7.pos.dao.*;
 import lk.ijse.dep7.pos.dao.impl.CustomerDAOImpl;
 import lk.ijse.dep7.pos.dao.impl.OrderDAOImpl;
 import lk.ijse.dep7.pos.dao.impl.OrderDetailDAOImpl;
@@ -32,10 +29,10 @@ public class OrderService {
 
     public OrderService(Connection connection) {
         this.connection = connection;
-        this.orderDAO = new OrderDAOImpl(connection);
-        this.orderDetailDAO = new OrderDetailDAOImpl(connection);
-        this.queryDAO = new QueryDAOImpl(connection);
-        this.customerDAO = new CustomerDAOImpl(connection);
+        this.orderDAO = DAOFactory.getInstance().getOrderDAO(connection);
+        this.orderDetailDAO = DAOFactory.getInstance().getOrderDetailDAO(connection);
+        this.queryDAO = DAOFactory.getInstance().getQueryDAO(connection);
+        this.customerDAO = DAOFactory.getInstance().getCustomerDAO(connection);
     }
 
     public void saveOrder(OrderDTO order) throws Exception {

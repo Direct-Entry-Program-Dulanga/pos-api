@@ -1,5 +1,6 @@
 package lk.ijse.dep7.pos.service;
 
+import lk.ijse.dep7.pos.dao.DAOFactory;
 import lk.ijse.dep7.pos.dao.ItemDAO;
 import lk.ijse.dep7.pos.dao.impl.ItemDAOImpl;
 import lk.ijse.dep7.pos.dto.ItemDTO;
@@ -17,7 +18,7 @@ public class ItemService {
     }
 
     public ItemService(Connection connection) {
-        itemDAO = new ItemDAOImpl(connection);
+        itemDAO = DAOFactory.getInstance().getItemDAO(connection);
     }
 
     public void saveItem(ItemDTO item) throws Exception {
