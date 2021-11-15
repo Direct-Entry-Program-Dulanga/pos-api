@@ -15,18 +15,18 @@ public class DAOFactory {
         return (daoFactory == null) ? (daoFactory = new DAOFactory()) : daoFactory;
     }
 
-    public <T extends SuperDAO> T getDAO(Connection connection, DAOType dao) {
+    public <T extends SuperDAO> T getDAO(DAOType dao) {
         switch (dao) {
             case CUSTOMER:
-                return (T) new CustomerDAOImpl(connection);
+                return (T) new CustomerDAOImpl();
             case ITEM:
-                return (T) new ItemDAOImpl(connection);
+                return (T) new ItemDAOImpl();
             case ORDER:
-                return (T) new OrderDAOImpl(connection);
+                return (T) new OrderDAOImpl();
             case ORDER_DETAIL:
-                return (T) new OrderDetailDAOImpl(connection);
+                return (T) new OrderDetailDAOImpl();
             case QUERY:
-                return (T) new QueryDAOImpl(connection);
+                return (T) new QueryDAOImpl();
             default:
                 throw new RuntimeException("Invalid DAO");
         }

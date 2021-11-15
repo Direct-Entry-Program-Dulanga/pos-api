@@ -1,6 +1,7 @@
 package lk.ijse.dep7.pos.dao.custom.impl;
 
 import lk.ijse.dep7.pos.dao.custom.OrderDetailDAO;
+import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.entity.OrderDetail;
 import lk.ijse.dep7.pos.entity.OrderDetailPK;
 
@@ -16,8 +17,8 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
 
     private final Connection connection;
 
-    public OrderDetailDAOImpl(Connection connection) {
-        this.connection = connection;
+    public OrderDetailDAOImpl() {
+        this.connection = DBConnection.getConnection();
     }
 
     @Override

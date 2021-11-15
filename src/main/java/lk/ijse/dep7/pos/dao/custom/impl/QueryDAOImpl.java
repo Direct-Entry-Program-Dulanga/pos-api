@@ -1,6 +1,7 @@
 package lk.ijse.dep7.pos.dao.custom.impl;
 
 import lk.ijse.dep7.pos.dao.custom.QueryDAO;
+import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.entity.CustomEntity;
 
 import java.sql.Connection;
@@ -14,8 +15,8 @@ public class QueryDAOImpl implements QueryDAO {
 
     private final Connection connection;
 
-    public QueryDAOImpl(Connection connection) {
-        this.connection = connection;
+    public QueryDAOImpl() {
+        this.connection = DBConnection.getConnection();
     }
 
     @Override

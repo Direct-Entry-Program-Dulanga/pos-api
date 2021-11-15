@@ -1,6 +1,7 @@
 package lk.ijse.dep7.pos.dao.custom.impl;
 
 import lk.ijse.dep7.pos.dao.custom.ItemDAO;
+import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.entity.Item;
 
 import java.sql.*;
@@ -12,8 +13,8 @@ public class ItemDAOImpl implements ItemDAO {
 
     private final Connection connection;
 
-    public ItemDAOImpl(Connection connection) {
-        this.connection = connection;
+    public ItemDAOImpl() {
+        this.connection = DBConnection.getConnection();
     }
 
     @Override

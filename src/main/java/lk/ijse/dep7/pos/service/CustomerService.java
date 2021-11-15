@@ -15,9 +15,6 @@ public class CustomerService {
     private CustomerDAO customerDAO;
 
     public CustomerService() {
-    }
-
-    public CustomerService(Connection connection) {
         customerDAO = DAOFactory.getInstance().getDAO(connection, DAOType.CUSTOMER);
     }
 

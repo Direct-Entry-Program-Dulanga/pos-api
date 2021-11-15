@@ -1,6 +1,7 @@
 package lk.ijse.dep7.pos.dao.custom.impl;
 
 import lk.ijse.dep7.pos.dao.custom.CustomerDAO;
+import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.entity.Customer;
 
 import java.sql.Connection;
@@ -15,8 +16,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     private final Connection connection;
 
-    public CustomerDAOImpl(Connection connection) {
-        this.connection = connection;
+    public CustomerDAOImpl() {
+        this.connection = DBConnection.getConnection();
     }
 
     @Override
