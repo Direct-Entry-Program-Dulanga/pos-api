@@ -1,10 +1,12 @@
 package lk.ijse.dep7.pos.service;
 
-import lk.ijse.dep7.pos.dao.*;
+import lk.ijse.dep7.pos.dao.DAOFactory;
+import lk.ijse.dep7.pos.dao.DAOType;
 import lk.ijse.dep7.pos.dao.custom.CustomerDAO;
 import lk.ijse.dep7.pos.dao.custom.OrderDAO;
 import lk.ijse.dep7.pos.dao.custom.OrderDetailDAO;
 import lk.ijse.dep7.pos.dao.custom.QueryDAO;
+import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.dto.ItemDTO;
 import lk.ijse.dep7.pos.dto.OrderDTO;
 import lk.ijse.dep7.pos.dto.OrderDetailDTO;
@@ -21,24 +23,23 @@ import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 
 public class OrderService {
 
-    private final Connection connection;
     private final CustomerDAO customerDAO;
     private final OrderDAO orderDAO;
     private final OrderDetailDAO orderDetailDAO;
     private final QueryDAO queryDAO;
 
-    public OrderService(Connection connection) {
-        this.connection = connection;
-        this.orderDAO = DAOFactory.getInstance().getDAO(connection, DAOType.ORDER);
-        this.orderDetailDAO = DAOFactory.getInstance().getDAO(connection, DAOType.ORDER_DETAIL);
-        this.queryDAO = DAOFactory.getInstance().getDAO(connection, DAOType.QUERY);
-        this.customerDAO = DAOFactory.getInstance().getDAO(connection, DAOType.CUSTOMER);
+    public OrderService() {
+        this.orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
+        this.orderDetailDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER_DETAIL);
+        this.queryDAO = DAOFactory.getInstance().getDAO(DAOType.QUERY);
+        this.customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
     }
 
     public void saveOrder(OrderDTO order) throws Exception {
 
-        final CustomerService customerService = new CustomerService(connection);
-        final ItemService itemService = new ItemService(connection);
+        final Connection connection = DBConnection.getConnection();
+        final CustomerService customerService = new CustomerService();
+        final ItemService itemService = new ItemService();
         final String orderId = order.getOrderId();
         final String customerId = order.getCustomerId();
 

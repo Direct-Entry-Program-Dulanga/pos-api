@@ -34,7 +34,7 @@ public class OrderServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            OrderService orderService = new OrderService(connection);
+            OrderService orderService = new OrderService();
             String q = req.getParameter("q");
             String id = req.getParameter("id");
             String page = req.getParameter("page");
@@ -120,7 +120,7 @@ public class OrderServlet extends HttpServlet {
                 }
             }
 
-            OrderService orderService = new OrderService(connection);
+            OrderService orderService = new OrderService();
 
             orderService.saveOrder(order);
             resp.setContentType("application/json");

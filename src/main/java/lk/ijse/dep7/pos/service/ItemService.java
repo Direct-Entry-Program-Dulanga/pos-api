@@ -5,20 +5,16 @@ import lk.ijse.dep7.pos.dao.DAOType;
 import lk.ijse.dep7.pos.dao.custom.ItemDAO;
 import lk.ijse.dep7.pos.dto.ItemDTO;
 
-import java.sql.Connection;
 import java.util.List;
 
 import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 
 public class ItemService {
 
-    private ItemDAO itemDAO;
+    private final ItemDAO itemDAO;
 
     public ItemService() {
-    }
-
-    public ItemService(Connection connection) {
-        itemDAO = DAOFactory.getInstance().getDAO(connection, DAOType.ITEM);
+        itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
     }
 
     public void saveItem(ItemDTO item) throws Exception {

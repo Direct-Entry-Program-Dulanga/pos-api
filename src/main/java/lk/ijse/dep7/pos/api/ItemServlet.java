@@ -34,7 +34,7 @@ public class ItemServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            ItemService itemService = new ItemService(connection);
+            ItemService itemService = new ItemService();
             String code = req.getParameter("code");
             String page = req.getParameter("page");
             String size = req.getParameter("size");
@@ -98,7 +98,7 @@ public class ItemServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid qty on hand");
                 return;
             }
-            ItemService itemService = new ItemService(connection);
+            ItemService itemService = new ItemService();
 
             item.setUnitPrice(item.getUnitPrice().setScale(2));
             itemService.saveItem(item);
@@ -141,7 +141,7 @@ public class ItemServlet extends HttpServlet {
 
             try (Connection connection = connectionPool.getConnection()) {
                 DBConnection.setConnection(connection);
-                ItemService itemService = new ItemService(connection);
+                ItemService itemService = new ItemService();
 
                 itemService.updateItem(item);
                 resp.setContentType("application/json");
@@ -168,7 +168,7 @@ public class ItemServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            ItemService itemService = new ItemService(connection);
+            ItemService itemService = new ItemService();
             itemService.deleteItem(code);
             resp.setContentType("application/json");
             resp.getWriter().println(jsonb.toJson("OK"));

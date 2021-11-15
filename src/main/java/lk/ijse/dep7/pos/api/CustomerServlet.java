@@ -33,7 +33,7 @@ public class CustomerServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            CustomerService customerService = new CustomerService(connection);
+            CustomerService customerService = new CustomerService();
             String id = req.getParameter("id");
             String page = req.getParameter("page");
             String size = req.getParameter("size");
@@ -99,7 +99,7 @@ public class CustomerServlet extends HttpServlet {
                 return;
             }
 
-            CustomerService customerService = new CustomerService(connection);
+            CustomerService customerService = new CustomerService();
 
             customerService.saveCustomer(customer);
             resp.setContentType("application/json");
@@ -139,7 +139,7 @@ public class CustomerServlet extends HttpServlet {
 
             try (Connection connection = connectionPool.getConnection()) {
                 DBConnection.setConnection(connection);
-                CustomerService customerService = new CustomerService(connection);
+                CustomerService customerService = new CustomerService();
                 customerService.updateCustomer(customer);
                 resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -166,7 +166,7 @@ public class CustomerServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            CustomerService customerService = new CustomerService(connection);
+            CustomerService customerService = new CustomerService();
 
             customerService.deleteCustomer(id);
             resp.setContentType("application/json");
