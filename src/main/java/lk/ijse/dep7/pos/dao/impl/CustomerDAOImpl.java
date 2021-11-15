@@ -21,9 +21,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public void save(SuperEntity entity) throws Exception {
+    public void save(Customer customer) throws Exception {
         PreparedStatement stm = connection.prepareStatement("INSERT INTO customer VALUES (?,?,?)");
-        Customer customer = (Customer) entity;
         stm.setString(1, customer.getId());
         stm.setString(2, customer.getName());
         stm.setString(3, customer.getAddress());
@@ -31,9 +30,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public void update(SuperEntity entity) throws Exception {
+    public void update(Customer customer) throws Exception {
         PreparedStatement stm = connection.prepareStatement("UPDATE customer SET name=?, address=? WHERE id=?");
-        Customer customer = (Customer) entity;
         stm.setString(1, customer.getName());
         stm.setString(2, customer.getAddress());
         stm.setString(3, customer.getId());
@@ -41,23 +39,23 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public void deleteById(Object key) throws Exception {
+    public void deleteById(String key) throws Exception {
         PreparedStatement stm = connection.prepareStatement("DELETE FROM customer WHERE id=?");
-        stm.setString(1, key.toString());
+        stm.setString(1, key);
         stm.executeUpdate();
     }
 
     @Override
-    public Optional<SuperEntity> findById(Object key) throws Exception {
+    public Optional<Customer> findById(String key) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
-        stm.setString(1, key.toString());
+        stm.setString(1, key);
         ResultSet rst = stm.executeQuery();
-        return (rst.next()) ? Optional.of(new Customer(key.toString(), rst.getString("name"), rst.getString("address"))) : Optional.empty();
+        return (rst.next()) ? Optional.of(new Customer(key, rst.getString("name"), rst.getString("address"))) : Optional.empty();
     }
 
     @Override
-    public List<SuperEntity> findAll() throws Exception {
-        List<SuperEntity> customersList = new ArrayList<>();
+    public List<Customer> findAll() throws Exception {
+        List<Customer> customersList = new ArrayList<>();
 
         Statement stm = connection.createStatement();
         ResultSet rst = stm.executeQuery("SELECT * FROM customer");
@@ -78,19 +76,19 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public boolean existsById(Object key) throws Exception {
+    public boolean existsById(String key) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT id FROM customer WHERE id=?");
-        stm.setString(1, key.toString());
+        stm.setString(1, key);
         return stm.executeQuery().next();
     }
 
     @Override
-    public List<SuperEntity> findAll(int page, int size) throws Exception {
+    public List<Customer> findAll(int page, int size) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM customer LIMIT ? OFFSET ?;");
         stm.setObject(1, size);
         stm.setObject(2, size * (page - 1));
         ResultSet rst = stm.executeQuery();
-        List<SuperEntity> customersList = new ArrayList<>();
+        List<Customer> customersList = new ArrayList<>();
 
         while (rst.next()) {
             customersList.add(new Customer(rst.getString("id"), rst.getString("name"), rst.getString("address")));
