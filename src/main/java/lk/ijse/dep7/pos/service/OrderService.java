@@ -1,6 +1,10 @@
 package lk.ijse.dep7.pos.service;
 
 import lk.ijse.dep7.pos.dao.*;
+import lk.ijse.dep7.pos.dao.custom.CustomerDAO;
+import lk.ijse.dep7.pos.dao.custom.OrderDAO;
+import lk.ijse.dep7.pos.dao.custom.OrderDetailDAO;
+import lk.ijse.dep7.pos.dao.custom.QueryDAO;
 import lk.ijse.dep7.pos.dto.ItemDTO;
 import lk.ijse.dep7.pos.dto.OrderDTO;
 import lk.ijse.dep7.pos.dto.OrderDetailDTO;

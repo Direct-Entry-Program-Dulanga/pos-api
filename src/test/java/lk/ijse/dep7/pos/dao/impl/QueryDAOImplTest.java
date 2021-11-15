@@ -1,5 +1,6 @@
 package lk.ijse.dep7.pos.dao.impl;
 
+import lk.ijse.dep7.pos.dao.custom.impl.QueryDAOImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

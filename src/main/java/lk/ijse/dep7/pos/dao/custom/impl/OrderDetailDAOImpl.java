@@ -1,6 +1,6 @@
-package lk.ijse.dep7.pos.dao.impl;
+package lk.ijse.dep7.pos.dao.custom.impl;
 
-import lk.ijse.dep7.pos.dao.OrderDetailDAO;
+import lk.ijse.dep7.pos.dao.custom.OrderDetailDAO;
 import lk.ijse.dep7.pos.entity.OrderDetail;
 import lk.ijse.dep7.pos.entity.OrderDetailPK;
 

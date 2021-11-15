@@ -1,7 +1,8 @@
 package lk.ijse.dep7.pos.service;
 
-import lk.ijse.dep7.pos.dao.CustomerDAO;
+import lk.ijse.dep7.pos.dao.custom.CustomerDAO;
 import lk.ijse.dep7.pos.dao.DAOFactory;
+import lk.ijse.dep7.pos.dao.DAOType;
 import lk.ijse.dep7.pos.dto.CustomerDTO;
 
 import java.sql.Connection;
@@ -17,7 +18,7 @@ public class CustomerService {
     }
 
     public CustomerService(Connection connection) {
-        this.customerDAO = DAOFactory.getInstance().getCustomerDAO(connection);
+        customerDAO = DAOFactory.getInstance().getDAO(connection, DAOType.CUSTOMER);
     }
 
     public void saveCustomer(CustomerDTO customer) throws Exception {
