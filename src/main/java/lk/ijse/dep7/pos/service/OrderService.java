@@ -68,6 +68,7 @@ public class OrderService {
 
         } catch (SQLException e) {
             failedOperationExecutionContext(connection::rollback);
+            throw e;
         } catch (Throwable t) {
             failedOperationExecutionContext(connection::rollback);
             throw t;

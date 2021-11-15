@@ -1,6 +1,7 @@
 package lk.ijse.dep7.pos.dao.impl;
 
 import lk.ijse.dep7.pos.dao.custom.impl.QueryDAOImpl;
+import lk.ijse.dep7.pos.db.DBConnection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,8 @@ class QueryDAOImplTest {
     void setUp() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dep7_pos","root","mysql");
-        queryDAOImpl = new QueryDAOImpl(connection);
+        DBConnection.setConnection(connection);
+        queryDAOImpl = new QueryDAOImpl();
     }
 
     @Test
