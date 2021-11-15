@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.dto.ItemDTO;
 import lk.ijse.dep7.pos.service.ItemService;
 
@@ -32,6 +33,7 @@ public class ItemServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try (Connection connection = connectionPool.getConnection()) {
+            DBConnection.setConnection(connection);
             ItemService itemService = new ItemService(connection);
             String code = req.getParameter("code");
             String page = req.getParameter("page");
@@ -80,6 +82,7 @@ public class ItemServlet extends HttpServlet {
         }
 
         try (Connection connection = connectionPool.getConnection()) {
+            DBConnection.setConnection(connection);
             ItemDTO item = jsonb.fromJson(req.getReader(), ItemDTO.class);
 
             if (item.getCode() == null || !item.getCode().matches("I\\d{3}")) {
@@ -137,6 +140,7 @@ public class ItemServlet extends HttpServlet {
             }
 
             try (Connection connection = connectionPool.getConnection()) {
+                DBConnection.setConnection(connection);
                 ItemService itemService = new ItemService(connection);
 
                 itemService.updateItem(item);
@@ -163,6 +167,7 @@ public class ItemServlet extends HttpServlet {
         }
 
         try (Connection connection = connectionPool.getConnection()) {
+            DBConnection.setConnection(connection);
             ItemService itemService = new ItemService(connection);
             itemService.deleteItem(code);
             resp.setContentType("application/json");

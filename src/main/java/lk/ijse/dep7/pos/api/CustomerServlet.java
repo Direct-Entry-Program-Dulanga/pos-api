@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.dto.CustomerDTO;
 import lk.ijse.dep7.pos.service.CustomerService;
 
@@ -31,6 +32,7 @@ public class CustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try (Connection connection = connectionPool.getConnection()) {
+            DBConnection.setConnection(connection);
             CustomerService customerService = new CustomerService(connection);
             String id = req.getParameter("id");
             String page = req.getParameter("page");
@@ -83,6 +85,7 @@ public class CustomerServlet extends HttpServlet {
         }
 
         try (Connection connection = connectionPool.getConnection()) {
+            DBConnection.setConnection(connection);
             CustomerDTO customer = jsonb.fromJson(req.getReader(), CustomerDTO.class);
 
             if (customer.getId() == null || !customer.getId().matches("C\\d{3}")) {
@@ -135,6 +138,7 @@ public class CustomerServlet extends HttpServlet {
             }
 
             try (Connection connection = connectionPool.getConnection()) {
+                DBConnection.setConnection(connection);
                 CustomerService customerService = new CustomerService(connection);
                 customerService.updateCustomer(customer);
                 resp.setContentType("application/json");
@@ -161,6 +165,7 @@ public class CustomerServlet extends HttpServlet {
         }
 
         try (Connection connection = connectionPool.getConnection()) {
+            DBConnection.setConnection(connection);
             CustomerService customerService = new CustomerService(connection);
 
             customerService.deleteCustomer(id);
