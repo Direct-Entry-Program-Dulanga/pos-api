@@ -48,7 +48,7 @@ public class OrderService {
         try {
             connection.setAutoCommit(false);
 
-            if (orderDAO.existsOrderById(orderId)) {
+            if (orderDAO.existsById(orderId)) {
                 throw new RuntimeException("Invalid Order ID." + orderId + " already exists");
             }
 
@@ -56,10 +56,10 @@ public class OrderService {
                 throw new RuntimeException("Invalid Customer ID." + customerId + " doesn't exist");
             }
 
-            orderDAO.saveOrder(fromOrderDTO(order));
+            orderDAO.save(fromOrderDTO(order));
 
             for (OrderDetailDTO detail : order.getOrderDetails()) {
-                orderDetailDAO.saveOrderDetail(fromOrderDetailDTO(orderId, detail));
+                orderDetailDAO.save(fromOrderDetailDTO(orderId, detail));
 
                 ItemDTO item = itemService.findItem(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
@@ -90,10 +90,10 @@ public class OrderService {
     }
 
     public OrderDTO searchOrder(String orderId) throws Exception {
-        Order order = orderDAO.findOrderById(orderId).<RuntimeException>orElseThrow(() -> {
+        Order order = orderDAO.findById(orderId).orElseThrow(() -> {
             throw new RuntimeException("Invalid Order ID: " + orderId);
         });
-        Customer customer = customerDAO.findCustomerById(order.getCustomerId()).get();
+        Customer customer = customerDAO.findById(order.getCustomerId()).get();
         BigDecimal orderTotal = orderDetailDAO.findOrderTotal(orderId).get();
         List<OrderDetail> orderDetails = orderDetailDAO.findOrderDetailsByOrderId(orderId);
 

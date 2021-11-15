@@ -24,39 +24,39 @@ public class ItemService {
         if (existItem(item.getCode())) {
             throw new RuntimeException(item.getCode() + " already exists");
         }
-        itemDAO.saveItem(fromItemDTO(item));
+        itemDAO.save(fromItemDTO(item));
     }
 
     private boolean existItem(String code) throws Exception {
-        return itemDAO.existsItemByCode(code);
+        return itemDAO.existsById(code);
     }
 
     public void updateItem(ItemDTO item) throws Exception {
         if (!existItem(item.getCode())) {
             throw new RuntimeException("There is no such item associated with the id " + item.getCode());
         }
-        itemDAO.updateItem(fromItemDTO(item));
+        itemDAO.update(fromItemDTO(item));
     }
 
     public void deleteItem(String code) throws Exception {
         if (!existItem(code)) {
             throw new RuntimeException("There is no such item associated with the id " + code);
         }
-        itemDAO.deleteItemByCode(code);
+        itemDAO.deleteById(code);
     }
 
     public ItemDTO findItem(String code) throws Exception {
-        return toItemDTO(itemDAO.findItemByCode(code).<RuntimeException>orElseThrow(() -> {
+        return toItemDTO(itemDAO.findById(code).orElseThrow(() -> {
             throw new RuntimeException("There is no such item associated with the id " + code);
         }));
     }
 
     public List<ItemDTO> findAllItems() throws Exception {
-        return toItemDTOList(itemDAO.findAllItems());
+        return toItemDTOList(itemDAO.findAll());
     }
 
     public List<ItemDTO> findAllItems(int page, int size) throws Exception {
-        return toItemDTOList(itemDAO.findAllItems(page, size));
+        return toItemDTOList(itemDAO.findAll(page, size));
     }
 
     public String generateNewItemCode() throws Exception {

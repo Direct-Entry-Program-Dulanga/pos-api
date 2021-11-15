@@ -24,43 +24,43 @@ public class CustomerService {
         if (existCustomer(customer.getId())) {
             throw new RuntimeException(customer.getId() + " already exists");
         }
-        customerDAO.saveCustomer(fromCustomerDTO(customer));
+        customerDAO.save(fromCustomerDTO(customer));
     }
 
     public long getCustomersCount() throws Exception {
-        return customerDAO.countCustomers();
+        return customerDAO.count();
     }
 
     boolean existCustomer(String id) throws Exception {
-        return customerDAO.existsCustomerById(id);
+        return customerDAO.existsById(id);
     }
 
     public void updateCustomer(CustomerDTO customer) throws Exception {
         if (!existCustomer(customer.getId())) {
             throw new RuntimeException("There is no such customer associated with the id " + customer.getId());
         }
-        customerDAO.updateCustomer(fromCustomerDTO(customer));
+        customerDAO.update(fromCustomerDTO(customer));
     }
 
     public void deleteCustomer(String id) throws Exception {
         if (!existCustomer(id)) {
             throw new RuntimeException("There is no such customer associated with the id " + id);
         }
-        customerDAO.deleteCustomerById(id);
+        customerDAO.deleteById(id);
     }
 
     public CustomerDTO findCustomer(String id) throws Exception {
-        return toCustomerDTO(customerDAO.findCustomerById(id).<RuntimeException>orElseThrow(() -> {
+        return toCustomerDTO(customerDAO.findById(id).orElseThrow(() -> {
             throw new RuntimeException("There is no such customer associated with the id " + id);
         }));
     }
 
     public List<CustomerDTO> findAllCustomers() throws Exception {
-        return toCustomerDTOList(customerDAO.findAllCustomers());
+        return toCustomerDTOList(customerDAO.findAll());
     }
 
     public List<CustomerDTO> findAllCustomers(int page, int size) throws Exception {
-        return toCustomerDTOList(customerDAO.findAllCustomers(page, size));
+        return toCustomerDTOList(customerDAO.findAll(page, size));
     }
 
     public String generateNewCustomerId() throws Exception {
