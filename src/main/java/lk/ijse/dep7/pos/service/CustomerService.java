@@ -51,7 +51,7 @@ public class CustomerService {
     }
 
     public CustomerDTO findCustomer(String id) throws Exception {
-        return toCustomerDTO(customerDAO.findById(id).orElseThrow(() -> {
+        return toCustomerDTO(customerDAO.findById(id).<RuntimeException>orElseThrow(() -> {
             throw new RuntimeException("There is no such customer associated with the id " + id);
         }));
     }

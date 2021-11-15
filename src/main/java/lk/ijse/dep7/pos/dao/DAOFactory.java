@@ -16,7 +16,7 @@ public class DAOFactory {
     }
 
     public CustomerDAO getCustomerDAO(Connection connection){
-        return new CustomerDAOImpl2(connection);
+        return new CustomerDAOImpl(connection);
     }
 
     public ItemDAO getItemDAO(Connection connection){
