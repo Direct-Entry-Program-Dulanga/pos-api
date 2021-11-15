@@ -2,7 +2,6 @@ package lk.ijse.dep7.pos.service;
 
 import lk.ijse.dep7.pos.dao.CustomerDAO;
 import lk.ijse.dep7.pos.dao.DAOFactory;
-import lk.ijse.dep7.pos.dao.impl.CustomerDAOImpl;
 import lk.ijse.dep7.pos.dto.CustomerDTO;
 
 import java.sql.Connection;
@@ -51,9 +50,7 @@ public class CustomerService {
     }
 
     public CustomerDTO findCustomer(String id) throws Exception {
-        return toCustomerDTO(customerDAO.findById(id).<RuntimeException>orElseThrow(() -> {
-            throw new RuntimeException("There is no such customer associated with the id " + id);
-        }));
+        return toCustomerDTO(customerDAO.findById(id).orElseThrow(() -> new RuntimeException("There is no such customer associated with the id " + id)));
     }
 
     public List<CustomerDTO> findAllCustomers() throws Exception {

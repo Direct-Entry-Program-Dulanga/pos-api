@@ -1,10 +1,6 @@
 package lk.ijse.dep7.pos.service;
 
 import lk.ijse.dep7.pos.dao.*;
-import lk.ijse.dep7.pos.dao.impl.CustomerDAOImpl;
-import lk.ijse.dep7.pos.dao.impl.OrderDAOImpl;
-import lk.ijse.dep7.pos.dao.impl.OrderDetailDAOImpl;
-import lk.ijse.dep7.pos.dao.impl.QueryDAOImpl;
 import lk.ijse.dep7.pos.dto.ItemDTO;
 import lk.ijse.dep7.pos.dto.OrderDTO;
 import lk.ijse.dep7.pos.dto.OrderDetailDTO;
@@ -87,9 +83,7 @@ public class OrderService {
     }
 
     public OrderDTO searchOrder(String orderId) throws Exception {
-        Order order = orderDAO.findById(orderId).<RuntimeException>orElseThrow(() -> {
-            throw new RuntimeException("Invalid Order ID: " + orderId);
-        });
+        Order order = orderDAO.findById(orderId).orElseThrow(() -> new RuntimeException("Invalid Order ID: " + orderId));
         Customer customer = customerDAO.findById(order.getCustomerId()).get();
         BigDecimal orderTotal = orderDetailDAO.findOrderTotal(orderId).get();
         List<OrderDetail> orderDetails = orderDetailDAO.findOrderDetailsByOrderId(orderId);

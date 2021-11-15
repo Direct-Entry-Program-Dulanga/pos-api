@@ -2,7 +2,6 @@ package lk.ijse.dep7.pos.service;
 
 import lk.ijse.dep7.pos.dao.DAOFactory;
 import lk.ijse.dep7.pos.dao.ItemDAO;
-import lk.ijse.dep7.pos.dao.impl.ItemDAOImpl;
 import lk.ijse.dep7.pos.dto.ItemDTO;
 
 import java.sql.Connection;
@@ -47,9 +46,7 @@ public class ItemService {
     }
 
     public ItemDTO findItem(String code) throws Exception {
-        return toItemDTO(itemDAO.findById(code).<RuntimeException>orElseThrow(() -> {
-            throw new RuntimeException("There is no such item associated with the id " + code);
-        }));
+        return toItemDTO(itemDAO.findById(code).orElseThrow(() -> new RuntimeException("There is no such item associated with the id " + code)));
     }
 
     public List<ItemDTO> findAllItems() throws Exception {
