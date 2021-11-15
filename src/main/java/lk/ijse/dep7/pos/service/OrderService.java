@@ -29,10 +29,10 @@ public class OrderService {
 
     public OrderService(Connection connection) {
         this.connection = connection;
-        this.orderDAO = DAOFactory.getInstance().getOrderDAO(connection);
-        this.orderDetailDAO = DAOFactory.getInstance().getOrderDetailDAO(connection);
-        this.queryDAO = DAOFactory.getInstance().getQueryDAO(connection);
-        this.customerDAO = DAOFactory.getInstance().getCustomerDAO(connection);
+        this.orderDAO = DAOFactory.getInstance().getDAO(connection, DAOType.ORDER);
+        this.orderDetailDAO = DAOFactory.getInstance().getDAO(connection, DAOType.ORDER_DETAIL);
+        this.queryDAO = DAOFactory.getInstance().getDAO(connection, DAOType.QUERY);
+        this.customerDAO = DAOFactory.getInstance().getDAO(connection, DAOType.CUSTOMER);
     }
 
     public void saveOrder(OrderDTO order) throws Exception {

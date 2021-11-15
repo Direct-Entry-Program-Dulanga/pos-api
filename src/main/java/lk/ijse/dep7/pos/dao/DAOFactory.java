@@ -1,7 +1,6 @@
 package lk.ijse.dep7.pos.dao;
 
 import lk.ijse.dep7.pos.dao.custom.impl.*;
-import lk.ijse.dep7.pos.dao.impl.*;
 
 import java.sql.Connection;
 
@@ -12,12 +11,12 @@ public class DAOFactory {
     private DAOFactory() {
     }
 
-    public static DAOFactory getInstance(){
-        return (daoFactory == null)? (daoFactory = new DAOFactory()): daoFactory;
+    public static DAOFactory getInstance() {
+        return (daoFactory == null) ? (daoFactory = new DAOFactory()) : daoFactory;
     }
 
-    public <T extends SuperDAO> T getDAO(Connection connection, DAOType dao){
-        switch (dao){
+    public <T extends SuperDAO> T getDAO(Connection connection, DAOType dao) {
+        switch (dao) {
             case CUSTOMER:
                 return (T) new CustomerDAOImpl(connection);
             case ITEM:
