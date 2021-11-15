@@ -2,7 +2,6 @@ package lk.ijse.dep7.pos.dao.impl;
 
 import lk.ijse.dep7.pos.dao.CustomerDAO;
 import lk.ijse.dep7.pos.entity.Customer;
-import lk.ijse.dep7.pos.entity.SuperEntity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

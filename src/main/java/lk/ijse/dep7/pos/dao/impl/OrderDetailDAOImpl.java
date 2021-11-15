@@ -21,7 +21,7 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     }
 
     @Override
-    public void saveOrderDetail(OrderDetail orderDetail) throws Exception {
+    public void save(OrderDetail orderDetail) throws Exception {
         PreparedStatement stm = connection.prepareStatement("INSERT INTO order_detail VALUES (?,?,?,?)");
         stm.setString(1, orderDetail.getOrderDetailPK().getOrderId());
         stm.setString(2, orderDetail.getOrderDetailPK().getItemCode());
@@ -31,7 +31,7 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     }
 
     @Override
-    public void updateOrderDetail(OrderDetail orderDetail) throws Exception {
+    public void update(OrderDetail orderDetail) throws Exception {
         PreparedStatement stm = connection.prepareStatement("UPDATE order_detail SET unit_price=?, qty=? WHERE order_id = ? AND item_code =?");
         stm.setBigDecimal(1, orderDetail.getUnitPrice());
         stm.setInt(2, orderDetail.getQty());
@@ -41,7 +41,7 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     }
 
     @Override
-    public void deleteOrderDetailByPK(OrderDetailPK orderDetailPK) throws Exception {
+    public void deleteById(OrderDetailPK orderDetailPK) throws Exception {
         PreparedStatement stm = connection.prepareStatement("DELETE FROM order_detail WHERE order_id = ? AND item_code =?");
         stm.setString(1, orderDetailPK.getOrderId());
         stm.setString(2, orderDetailPK.getItemCode());
@@ -49,7 +49,7 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     }
 
     @Override
-    public Optional<OrderDetail> findOrderDetailByPK(OrderDetailPK orderDetailPK) throws Exception {
+    public Optional<OrderDetail> findById(OrderDetailPK orderDetailPK) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM order_detail WHERE order_id = ? AND item_code =?");
         stm.setString(1, orderDetailPK.getOrderId());
         stm.setString(2, orderDetailPK.getItemCode());
@@ -62,7 +62,7 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     }
 
     @Override
-    public List<OrderDetail> findAllOrderDetails() throws Exception {
+    public List<OrderDetail> findAll() throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM order_detail");
         ResultSet rst = stm.executeQuery();
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -77,7 +77,7 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     }
 
     @Override
-    public long countOrderDetails() throws Exception {
+    public long count() throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT COUNT(*) FROM order_detail");
         ResultSet rst = stm.executeQuery();
         rst.next();
@@ -85,7 +85,7 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     }
 
     @Override
-    public boolean existsOrderDetailByPK(OrderDetailPK orderDetailPK) throws Exception {
+    public boolean existsById(OrderDetailPK orderDetailPK) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM order_detail WHERE order_id = ? AND item_code =?");
         stm.setString(1, orderDetailPK.getOrderId());
         stm.setString(2, orderDetailPK.getItemCode());
@@ -94,16 +94,34 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     }
 
     @Override
-    public Optional<BigDecimal> findOrderTotal(String orderId) throws Exception{
+    public List<OrderDetail> findAll(int page, int size) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("SELECT * FROM `order_detail` LIMIT ? OFFSET ?;");
+        stm.setObject(1, size);
+        stm.setObject(2, size * (page - 1));
+
+        ResultSet rst = stm.executeQuery();
+        List<OrderDetail> orderDetailList = new ArrayList<>();
+
+        while (rst.next()) {
+            orderDetailList.add(new OrderDetail(rst.getString("order_id"),
+                    rst.getString("item_code"),
+                    rst.getBigDecimal("unit_price"),
+                    rst.getInt("qty")));
+        }
+        return orderDetailList;
+    }
+
+    @Override
+    public Optional<BigDecimal> findOrderTotal(String orderId) throws Exception {
         PreparedStatement stm = connection.
                 prepareStatement("SELECT order_id, SUM(unit_price * qty) as total FROM order_detail WHERE order_id=? GROUP BY order_id;");
         stm.setString(1, orderId);
         ResultSet rst = stm.executeQuery();
-        return rst.next()? Optional.of(rst.getBigDecimal("total")): Optional.empty();
+        return rst.next() ? Optional.of(rst.getBigDecimal("total")) : Optional.empty();
     }
 
     @Override
-    public List<OrderDetail> findOrderDetailsByOrderId(String orderId) throws Exception{
+    public List<OrderDetail> findOrderDetailsByOrderId(String orderId) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM `order_detail` WHERE order_id =?");
         stm.setString(1, orderId);
         ResultSet rst = stm.executeQuery();

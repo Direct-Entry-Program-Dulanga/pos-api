@@ -20,7 +20,7 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public void saveOrder(Order order) throws Exception {
+    public void save(Order order) throws Exception {
         PreparedStatement stm = connection.prepareStatement("INSERT INTO `order` (id, date, customer_id) VALUES (?,?,?)");
         stm.setString(1, order.getId());
         stm.setDate(2, order.getDate());
@@ -29,7 +29,7 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public void updateOrder(Order order) throws Exception {
+    public void update(Order order) throws Exception {
         PreparedStatement stm = connection.prepareStatement("UPDATE `order` SET date=?, customer_id=? WHERE id=?");
         stm.setDate(1, order.getDate());
         stm.setString(2, order.getCustomerId());
@@ -38,14 +38,14 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public void deleteOrderById(String orderId) throws Exception {
+    public void deleteById(String orderId) throws Exception {
         PreparedStatement stm = connection.prepareStatement("DELETE FROM `order` WHERE id=?");
         stm.setString(1, orderId);
         stm.executeUpdate();
     }
 
     @Override
-    public Optional<Order> findOrderById(String orderId) throws Exception {
+    public Optional<Order> findById(String orderId) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM `order` WHERE id=?");
         stm.setString(1, orderId);
         ResultSet rst = stm.executeQuery();
@@ -53,7 +53,7 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public List<Order> findAllOrders() throws Exception {
+    public List<Order> findAll() throws Exception {
         List<Order> orderList = new ArrayList<>();
 
         Statement stm = connection.createStatement();
@@ -67,7 +67,7 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public long countOrders() throws Exception {
+    public long count() throws Exception {
         Statement stm = connection.createStatement();
         ResultSet rst = stm.executeQuery("SELECT COUNT(*) FROM `order`");
         rst.next();
@@ -75,10 +75,25 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public boolean existsOrderById(String orderId) throws Exception {
+    public boolean existsById(String orderId) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT id FROM `order` WHERE id=?");
         stm.setString(1, orderId);
         return stm.executeQuery().next();
+    }
+
+    @Override
+    public List<Order> findAll(int page, int size) throws Exception {
+        PreparedStatement stm = connection.prepareStatement("SELECT * FROM `order` LIMIT ? OFFSET ?;");
+        stm.setObject(1, size);
+        stm.setObject(2, size * (page - 1));
+
+        ResultSet rst = stm.executeQuery();
+        List<Order> orderList = new ArrayList<>();
+
+        while (rst.next()) {
+            orderList.add(new Order(rst.getString("id"), rst.getDate("date"), rst.getString("customer_id")));
+        }
+        return orderList;
     }
 
     @Override

@@ -2,11 +2,9 @@ package lk.ijse.dep7.pos.dao.impl;
 
 import lk.ijse.dep7.pos.dao.ItemDAO;
 import lk.ijse.dep7.pos.entity.Item;
-import lk.ijse.dep7.pos.entity.SuperEntity;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +17,8 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public void save(SuperEntity entity) throws Exception {
+    public void save(Item item) throws Exception {
         PreparedStatement stm = connection.prepareStatement("INSERT INTO item (code, description, unit_price, qty_on_hand) VALUES (?,?,?,?)");
-        Item item = (Item) entity;
         stm.setString(1, item.getCode());
         stm.setString(2, item.getDescription());
         stm.setBigDecimal(3, item.getUnitPrice());
@@ -30,7 +27,7 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public void updateItem(Item item) throws Exception {
+    public void update(Item item) throws Exception {
         PreparedStatement stm = connection.prepareStatement("UPDATE item SET description=?, unit_price=?, qty_on_hand=? WHERE code=?");
         stm.setString(1, item.getDescription());
         stm.setBigDecimal(2, item.getUnitPrice());
@@ -40,14 +37,14 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public void deleteItemByCode(String itemCode) throws Exception {
+    public void deleteById(String itemCode) throws Exception {
         PreparedStatement stm = connection.prepareStatement("DELETE FROM item WHERE code=?");
         stm.setString(1, itemCode);
         stm.executeUpdate();
     }
 
     @Override
-    public Optional<Item> findItemByCode(String itemCode) throws Exception {
+    public Optional<Item> findById(String itemCode) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT * FROM item WHERE code=?");
         stm.setString(1, itemCode);
         ResultSet rst = stm.executeQuery();
@@ -56,7 +53,7 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public List<Item> findAllItems() throws Exception {
+    public List<Item> findAll() throws Exception {
         List<Item> itemList = new ArrayList<>();
         Statement stm = connection.createStatement();
         ResultSet rst = stm.executeQuery("SELECT * FROM item");
@@ -69,7 +66,7 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public long countItems() throws Exception {
+    public long count() throws Exception {
         Statement stm = connection.createStatement();
         ResultSet rst = stm.executeQuery("SELECT COUNT(*) FROM item");
         rst.next();
@@ -77,14 +74,14 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public boolean existsItemByCode(String itemCode) throws Exception {
+    public boolean existsById(String itemCode) throws Exception {
         PreparedStatement stm = connection.prepareStatement("SELECT code FROM item WHERE code=?");
         stm.setString(1, itemCode);
         return stm.executeQuery().next();
     }
 
     @Override
-    public List<Item> findAllItems(int page, int size) throws Exception {
+    public List<Item> findAll(int page, int size) throws Exception {
         try {
             PreparedStatement stm = connection.prepareStatement("SELECT * FROM item LIMIT ? OFFSET ?;");
             stm.setObject(1, size);
