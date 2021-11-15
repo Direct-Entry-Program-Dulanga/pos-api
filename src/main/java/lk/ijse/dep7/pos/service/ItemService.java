@@ -46,7 +46,7 @@ public class ItemService {
     }
 
     public ItemDTO findItem(String code) throws Exception {
-        return toItemDTO(itemDAO.findById(code).orElseThrow(() -> {
+        return toItemDTO(itemDAO.findById(code).<RuntimeException>orElseThrow(() -> {
             throw new RuntimeException("There is no such item associated with the id " + code);
         }));
     }
