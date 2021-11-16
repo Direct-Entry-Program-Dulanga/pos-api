@@ -6,7 +6,7 @@
 
     <groupId>lk.ijse.dep7</groupId>
     <artifactId>pos-api</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <name>pos-api</name>
     <packaging>war</packaging>
 

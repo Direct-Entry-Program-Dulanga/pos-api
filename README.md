@@ -18,9 +18,26 @@ The REST API for the Point of Sale System
 * Open an HTTP GET request and try [http://localhost:8080/pos/customers]() and it should display a JSON array, if not please troubleshoot the error before proceeding
 
 ## Change Log
+### [v1.0.0](https://github.com/Direct-Entry-Program-7/pos-api/releases/tag/v1.0.0)
+* Compound Architecture (MVC2, Layered, Client-Server, SOA)
+* DAO Design Pattern (Java EE)
+* DTO vs. Entity (Java EE)
+* Facade Design Pattern (Structural)
+* Factory Design Pattern (Creational)
+* Strategy Design Pattern (Behavioral)
+* Marker Design Pattern (Structural)
+* Null Object Design Pattern (Behavioral) [Optional]
+* Dependency Injection Design Pattern (Without IoC) (Creational)
+* KISS, WET, DRY Design Principles
+* SOLID Principles
+* Java Generics and Generic Programming Paradigm
+* Entity DTO Mapper
+* ThreadLocal
+
 ### [v0.0.1](https://github.com/Direct-Entry-Program-7/pos-api/releases/tag/v0.0.1)
 * Servlet 5 (Tomcat 10)
 * JSONB (Yasson)
+* DTO Design Pattern
 * Junit 5
 * Tomcat DBCP
 
