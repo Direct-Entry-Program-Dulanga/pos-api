@@ -13,6 +13,7 @@ import lk.ijse.dep7.pos.dto.OrderDetailDTO;
 import lk.ijse.dep7.pos.entity.Customer;
 import lk.ijse.dep7.pos.entity.Order;
 import lk.ijse.dep7.pos.entity.OrderDetail;
+import lk.ijse.dep7.pos.service.custom.OrderService;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -21,7 +22,7 @@ import java.util.List;
 
 import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 
-public class OrderServiceImpl {
+public class OrderServiceImpl implements OrderService {
 
     private final CustomerDAO customerDAO;
     private final OrderDAO orderDAO;
@@ -35,6 +36,7 @@ public class OrderServiceImpl {
         this.customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
     }
 
+    @Override
     public void saveOrder(OrderDTO order) throws Exception {
 
         final Connection connection = DBConnection.getConnection();
@@ -78,16 +80,19 @@ public class OrderServiceImpl {
 
     }
 
+    @Override
     public long getSearchOrdersCount(String query) throws Exception {
         return queryDAO.countOrders(query);
     }
 
+    @Override
     public List<OrderDTO> searchOrders(String query, int page, int size) throws Exception {
         // CustomEntity => OrderDTO
         // List<CustomEntity> => List<OrderDTO>
         return toOrderDTO2(queryDAO.findOrders(query, page, size));
     }
 
+    @Override
     public OrderDTO searchOrder(String orderId) throws Exception {
         Order order = orderDAO.findById(orderId).orElseThrow(() -> new RuntimeException("Invalid Order ID: " + orderId));
         Customer customer = customerDAO.findById(order.getCustomerId()).get();
@@ -97,6 +102,7 @@ public class OrderServiceImpl {
         return toOrderDTO(order, customer, orderTotal, orderDetails);
     }
 
+    @Override
     public String generateNewOrderId() throws Exception {
         String id = orderDAO.getLastOrderId();
         if (id != null) {
