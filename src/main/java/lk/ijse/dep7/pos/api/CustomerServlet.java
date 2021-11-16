@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.dto.CustomerDTO;
-import lk.ijse.dep7.pos.service.CustomerService;
+import lk.ijse.dep7.pos.service.custom.impl.CustomerServiceImpl;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class CustomerServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            CustomerService customerService = new CustomerService();
+            CustomerServiceImpl customerService = new CustomerServiceImpl();
             String id = req.getParameter("id");
             String page = req.getParameter("page");
             String size = req.getParameter("size");
@@ -99,7 +99,7 @@ public class CustomerServlet extends HttpServlet {
                 return;
             }
 
-            CustomerService customerService = new CustomerService();
+            CustomerServiceImpl customerService = new CustomerServiceImpl();
 
             customerService.saveCustomer(customer);
             resp.setContentType("application/json");
@@ -139,7 +139,7 @@ public class CustomerServlet extends HttpServlet {
 
             try (Connection connection = connectionPool.getConnection()) {
                 DBConnection.setConnection(connection);
-                CustomerService customerService = new CustomerService();
+                CustomerServiceImpl customerService = new CustomerServiceImpl();
                 customerService.updateCustomer(customer);
                 resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -166,7 +166,7 @@ public class CustomerServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            CustomerService customerService = new CustomerService();
+            CustomerServiceImpl customerService = new CustomerServiceImpl();
 
             customerService.deleteCustomer(id);
             resp.setContentType("application/json");

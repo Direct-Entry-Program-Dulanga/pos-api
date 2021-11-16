@@ -1,4 +1,4 @@
-package lk.ijse.dep7.pos.service;
+package lk.ijse.dep7.pos.service.custom.impl;
 
 import lk.ijse.dep7.pos.dao.DAOFactory;
 import lk.ijse.dep7.pos.dao.DAOType;
@@ -9,11 +9,11 @@ import java.util.List;
 
 import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 
-public class ItemService {
+public class ItemServiceImpl {
 
     private final ItemDAO itemDAO;
 
-    public ItemService() {
+    public ItemServiceImpl() {
         itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
     }
 

@@ -1,4 +1,4 @@
-package lk.ijse.dep7.pos.service;
+package lk.ijse.dep7.pos.service.custom.impl;
 
 import lk.ijse.dep7.pos.dao.DAOFactory;
 import lk.ijse.dep7.pos.dao.DAOType;
@@ -21,14 +21,14 @@ import java.util.List;
 
 import static lk.ijse.dep7.pos.service.util.EntityDTOMapper.*;
 
-public class OrderService {
+public class OrderServiceImpl {
 
     private final CustomerDAO customerDAO;
     private final OrderDAO orderDAO;
     private final OrderDetailDAO orderDetailDAO;
     private final QueryDAO queryDAO;
 
-    public OrderService() {
+    public OrderServiceImpl() {
         this.orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
         this.orderDetailDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER_DETAIL);
         this.queryDAO = DAOFactory.getInstance().getDAO(DAOType.QUERY);
@@ -38,8 +38,8 @@ public class OrderService {
     public void saveOrder(OrderDTO order) throws Exception {
 
         final Connection connection = DBConnection.getConnection();
-        final CustomerService customerService = new CustomerService();
-        final ItemService itemService = new ItemService();
+        final CustomerServiceImpl customerService = new CustomerServiceImpl();
+        final ItemServiceImpl itemService = new ItemServiceImpl();
         final String orderId = order.getOrderId();
         final String customerId = order.getCustomerId();
 
