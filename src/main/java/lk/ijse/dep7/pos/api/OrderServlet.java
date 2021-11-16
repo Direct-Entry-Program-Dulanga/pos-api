@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.dto.OrderDTO;
+import lk.ijse.dep7.pos.service.ServiceFactory;
+import lk.ijse.dep7.pos.service.ServiceType;
+import lk.ijse.dep7.pos.service.custom.OrderService;
 import lk.ijse.dep7.pos.service.custom.impl.OrderServiceImpl;
 
 import javax.sql.DataSource;
@@ -34,7 +37,7 @@ public class OrderServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            OrderServiceImpl orderService = new OrderServiceImpl();
+            OrderService orderService = ServiceFactory.getInstance().getService(ServiceType.ORDER);
             String q = req.getParameter("q");
             String id = req.getParameter("id");
             String page = req.getParameter("page");
@@ -119,8 +122,7 @@ public class OrderServlet extends HttpServlet {
                     return;
                 }
             }
-
-            OrderServiceImpl orderService = new OrderServiceImpl();
+            OrderService orderService = ServiceFactory.getInstance().getService(ServiceType.ORDER);
 
             orderService.saveOrder(order);
             resp.setContentType("application/json");

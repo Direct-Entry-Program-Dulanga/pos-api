@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.dto.CustomerDTO;
+import lk.ijse.dep7.pos.service.ServiceFactory;
+import lk.ijse.dep7.pos.service.ServiceType;
+import lk.ijse.dep7.pos.service.custom.CustomerService;
 import lk.ijse.dep7.pos.service.custom.impl.CustomerServiceImpl;
 
 import javax.sql.DataSource;
@@ -33,7 +36,7 @@ public class CustomerServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            CustomerServiceImpl customerService = new CustomerServiceImpl();
+            CustomerService customerService = ServiceFactory.getInstance().getService(ServiceType.CUSTOMER);
             String id = req.getParameter("id");
             String page = req.getParameter("page");
             String size = req.getParameter("size");
@@ -99,7 +102,7 @@ public class CustomerServlet extends HttpServlet {
                 return;
             }
 
-            CustomerServiceImpl customerService = new CustomerServiceImpl();
+            CustomerService customerService = ServiceFactory.getInstance().getService(ServiceType.CUSTOMER);
 
             customerService.saveCustomer(customer);
             resp.setContentType("application/json");
@@ -139,7 +142,7 @@ public class CustomerServlet extends HttpServlet {
 
             try (Connection connection = connectionPool.getConnection()) {
                 DBConnection.setConnection(connection);
-                CustomerServiceImpl customerService = new CustomerServiceImpl();
+                CustomerService customerService = ServiceFactory.getInstance().getService(ServiceType.CUSTOMER);
                 customerService.updateCustomer(customer);
                 resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -166,7 +169,7 @@ public class CustomerServlet extends HttpServlet {
 
         try (Connection connection = connectionPool.getConnection()) {
             DBConnection.setConnection(connection);
-            CustomerServiceImpl customerService = new CustomerServiceImpl();
+            CustomerService customerService = ServiceFactory.getInstance().getService(ServiceType.CUSTOMER);
 
             customerService.deleteCustomer(id);
             resp.setContentType("application/json");

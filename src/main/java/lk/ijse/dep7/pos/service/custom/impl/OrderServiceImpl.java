@@ -13,6 +13,10 @@ import lk.ijse.dep7.pos.dto.OrderDetailDTO;
 import lk.ijse.dep7.pos.entity.Customer;
 import lk.ijse.dep7.pos.entity.Order;
 import lk.ijse.dep7.pos.entity.OrderDetail;
+import lk.ijse.dep7.pos.service.ServiceFactory;
+import lk.ijse.dep7.pos.service.ServiceType;
+import lk.ijse.dep7.pos.service.custom.CustomerService;
+import lk.ijse.dep7.pos.service.custom.ItemService;
 import lk.ijse.dep7.pos.service.custom.OrderService;
 
 import java.math.BigDecimal;
@@ -40,8 +44,8 @@ public class OrderServiceImpl implements OrderService {
     public void saveOrder(OrderDTO order) throws Exception {
 
         final Connection connection = DBConnection.getConnection();
-        final CustomerServiceImpl customerService = new CustomerServiceImpl();
-        final ItemServiceImpl itemService = new ItemServiceImpl();
+        final CustomerService customerService = ServiceFactory.getInstance().getService(ServiceType.CUSTOMER);
+        final ItemService itemService = ServiceFactory.getInstance().getService(ServiceType.ITEM);
         final String orderId = order.getOrderId();
         final String customerId = order.getCustomerId();
 
