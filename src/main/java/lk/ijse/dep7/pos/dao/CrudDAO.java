@@ -8,20 +8,20 @@ import java.util.Optional;
 
 public interface CrudDAO<T extends SuperEntity, ID extends Serializable> extends SuperDAO {
 
-    void save(T entity) throws Exception;
+    void save(T entity);
 
-    void update(T entity) throws Exception;
+    void update(T entity);
 
-    void deleteById(ID key) throws Exception;
+    void deleteById(ID key);
 
-    Optional<T> findById(ID key) throws Exception;
+    Optional<T> findById(ID key);
 
-    List<T> findAll() throws Exception;
+    List<T> findAll();
 
-    long count() throws Exception;
+    long count();
 
-    boolean existsById(ID key) throws Exception;
+    boolean existsById(ID key);
 
-    List<T> findAll(int page, int size) throws Exception;
+    List<T> findAll(int page, int size);
 
 }
