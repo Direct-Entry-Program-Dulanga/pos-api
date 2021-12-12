@@ -31,24 +31,4 @@ public class DAOFactory {
                 throw new RuntimeException("Invalid DAO");
         }
     }
-
-//    public CustomerDAO getCustomerDAO(Connection connection){
-//        return new CustomerDAOImpl(connection);
-//    }
-//
-//    public ItemDAO getItemDAO(Connection connection){
-//        return new ItemDAOImpl(connection);
-//    }
-//
-//    public OrderDAO getOrderDAO(Connection connection){
-//        return new OrderDAOImpl(connection);
-//    }
-//
-//    public OrderDetailDAO getOrderDetailDAO(Connection connection){
-//        return new OrderDetailDAOImpl(connection);
-//    }
-//
-//    public QueryDAO getQueryDAO(Connection connection){
-//        return new QueryDAOImpl(connection);
-//    }
 }

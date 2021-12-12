@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface OrderDetailDAO extends CrudDAO<OrderDetail, OrderDetailPK> {
 
-    Optional<BigDecimal> findOrderTotal(String orderId) throws Exception;
+    Optional<BigDecimal> findOrderTotal(String orderId);
 
-    List<OrderDetail> findOrderDetailsByOrderId(String orderId) throws Exception;
+    List<OrderDetail> findOrderDetailsByOrderId(String orderId);
 }

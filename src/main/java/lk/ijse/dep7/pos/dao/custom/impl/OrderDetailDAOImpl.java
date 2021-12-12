@@ -1,6 +1,7 @@
 package lk.ijse.dep7.pos.dao.custom.impl;
 
 import lk.ijse.dep7.pos.dao.CrudDAOImpl;
+import lk.ijse.dep7.pos.dao.custom.OrderDetailDAO;
 import lk.ijse.dep7.pos.entity.OrderDetail;
 import lk.ijse.dep7.pos.entity.OrderDetailPK;
 
@@ -8,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderDetailDAOImpl extends CrudDAOImpl<OrderDetail, OrderDetailPK> {
+public class OrderDetailDAOImpl extends CrudDAOImpl<OrderDetail, OrderDetailPK> implements OrderDetailDAO {
 
     @Override
     public Optional<BigDecimal> findOrderTotal(String orderId) {

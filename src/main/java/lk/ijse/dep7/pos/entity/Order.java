@@ -1,51 +1,36 @@
 package lk.ijse.dep7.pos.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
+@Data
+@NoArgsConstructor
+@Table(name = "`order`")
+@Entity
 public class Order implements SuperEntity {
+    @Id
     private String id;
+    @Column(nullable = false)
     private Date date;
-    private String customerId;
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false )
+    private Customer customer;
 
-    public Order() {
-    }
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderDetail> orderDetails;
 
-    public Order(String id, Date date, String customerId) {
+
+    public Order(String id, Date date, Customer customer, Set<OrderDetail>  orderDetails) {
         this.id = id;
         this.date = date;
-        this.customerId = customerId;
+        this.customer = customer;
+        this.orderDetails = orderDetails;
+        this.orderDetails.forEach(od -> od.getOrderDetailPK().setOrderId(id));
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id='" + id + '\'' +
-                ", date=" + date +
-                ", customerId='" + customerId + '\'' +
-                '}';
-    }
 }
