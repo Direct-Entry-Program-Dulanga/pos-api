@@ -29,14 +29,12 @@ public class OrderServlet extends HttpServlet {
 
     private final Jsonb jsonb = JsonbBuilder.create();
 
-    @Resource(name = "java:comp/env/jdbc/posCP")
-    public DataSource connectionPool;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try (Connection connection = connectionPool.getConnection()) {
-            DBConnection.setConnection(connection);
+        try {
+
             OrderService orderService = ServiceFactory.getInstance().getService(ServiceType.ORDER);
             String q = req.getParameter("q");
             String id = req.getParameter("id");
@@ -90,8 +88,7 @@ public class OrderServlet extends HttpServlet {
             return;
         }
 
-        try (Connection connection = connectionPool.getConnection()) {
-            DBConnection.setConnection(connection);
+        try {
             OrderDTO order = jsonb.fromJson(req.getReader(), OrderDTO.class);
 
             if (order.getOrderId() == null || !order.getOrderId().matches("OD\\d{3}")) {

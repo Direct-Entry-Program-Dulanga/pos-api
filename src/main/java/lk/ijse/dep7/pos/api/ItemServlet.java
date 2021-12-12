@@ -1,6 +1,5 @@
 package lk.ijse.dep7.pos.api;
 
-import jakarta.annotation.Resource;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
@@ -9,18 +8,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lk.ijse.dep7.pos.db.DBConnection;
 import lk.ijse.dep7.pos.dto.ItemDTO;
 import lk.ijse.dep7.pos.service.ServiceFactory;
 import lk.ijse.dep7.pos.service.ServiceType;
 import lk.ijse.dep7.pos.service.custom.ItemService;
-import lk.ijse.dep7.pos.service.custom.impl.ItemServiceImpl;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,14 +24,11 @@ public class ItemServlet extends HttpServlet {
 
     private final Jsonb jsonb = JsonbBuilder.create();
 
-    @Resource(name = "java:comp/env/jdbc/posCP")
-    public DataSource connectionPool;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try (Connection connection = connectionPool.getConnection()) {
-            DBConnection.setConnection(connection);
+        try {
             ItemService itemService = ServiceFactory.getInstance().getService(ServiceType.ITEM);
             String code = req.getParameter("code");
             String page = req.getParameter("page");
@@ -84,8 +76,7 @@ public class ItemServlet extends HttpServlet {
             return;
         }
 
-        try (Connection connection = connectionPool.getConnection()) {
-            DBConnection.setConnection(connection);
+        try {
             ItemDTO item = jsonb.fromJson(req.getReader(), ItemDTO.class);
 
             if (item.getCode() == null || !item.getCode().matches("I\\d{3}")) {
@@ -142,8 +133,8 @@ public class ItemServlet extends HttpServlet {
                 return;
             }
 
-            try (Connection connection = connectionPool.getConnection()) {
-                DBConnection.setConnection(connection);
+            try {
+
                 ItemService itemService = ServiceFactory.getInstance().getService(ServiceType.ITEM);
 
                 itemService.updateItem(item);
@@ -169,8 +160,7 @@ public class ItemServlet extends HttpServlet {
             return;
         }
 
-        try (Connection connection = connectionPool.getConnection()) {
-            DBConnection.setConnection(connection);
+        try {
             ItemService itemService = ServiceFactory.getInstance().getService(ServiceType.ITEM);
             itemService.deleteItem(code);
             resp.setContentType("application/json");

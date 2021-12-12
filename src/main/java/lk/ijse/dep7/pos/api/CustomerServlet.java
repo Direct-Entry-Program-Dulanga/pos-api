@@ -28,14 +28,11 @@ public class CustomerServlet extends HttpServlet {
 
     private final Jsonb jsonb = JsonbBuilder.create();
 
-    @Resource(name = "java:comp/env/jdbc/posCP")
-    public DataSource connectionPool;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try (Connection connection = connectionPool.getConnection()) {
-            DBConnection.setConnection(connection);
+        try {
             CustomerService customerService = ServiceFactory.getInstance().getService(ServiceType.CUSTOMER);
             String id = req.getParameter("id");
             String page = req.getParameter("page");
@@ -87,8 +84,8 @@ public class CustomerServlet extends HttpServlet {
             return;
         }
 
-        try (Connection connection = connectionPool.getConnection()) {
-            DBConnection.setConnection(connection);
+        try {
+
             CustomerDTO customer = jsonb.fromJson(req.getReader(), CustomerDTO.class);
 
             if (customer.getId() == null || !customer.getId().matches("C\\d{3}")) {
@@ -140,8 +137,7 @@ public class CustomerServlet extends HttpServlet {
                 return;
             }
 
-            try (Connection connection = connectionPool.getConnection()) {
-                DBConnection.setConnection(connection);
+            try {
                 CustomerService customerService = ServiceFactory.getInstance().getService(ServiceType.CUSTOMER);
                 customerService.updateCustomer(customer);
                 resp.setContentType("application/json");
@@ -167,8 +163,7 @@ public class CustomerServlet extends HttpServlet {
             return;
         }
 
-        try (Connection connection = connectionPool.getConnection()) {
-            DBConnection.setConnection(connection);
+        try {
             CustomerService customerService = ServiceFactory.getInstance().getService(ServiceType.CUSTOMER);
 
             customerService.deleteCustomer(id);
